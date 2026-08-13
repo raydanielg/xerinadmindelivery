@@ -34,181 +34,367 @@
 @endif
 <!-- Newsletters Section End -->
 
-<footer class="mt-4 mt-sm-60">
-    @php($logo = getSession('header_logo'))
-    @php($footerLogo = getSession('footer_logo'))
-    @php($email = getSession('business_contact_email'))
-    @php($contactNumber = getSession('business_contact_phone'))
-    @php($businessAddress = getSession('business_address'))
-    @php($businessName = getSession('business_name'))
-    @php($footerContent = landingPageConfig(key: 'footer_contents', settingsType: FOOTER)?->value ?? null)
-    @php($links = \Modules\BusinessManagement\Entities\SocialLink::where(['is_active'=>1])->orderBy('name','asc')->get())
-    @php($driverAppVersionControlForAndroid = businessConfig(key: DRIVER_APP_VERSION_CONTROL_FOR_ANDROID, settingsType: APP_VERSION)?->value ?? null)
-    @php($driverAppVersionControlForIos = businessConfig(key: DRIVER_APP_VERSION_CONTROL_FOR_IOS, settingsType: APP_VERSION)?->value ?? null)
-    @php($customerAppVersionControlForAndroid = businessConfig(key: CUSTOMER_APP_VERSION_CONTROL_FOR_ANDROID, settingsType: APP_VERSION)?->value ?? null)
-    @php($customerAppVersionControlForIos = businessConfig(key: CUSTOMER_APP_VERSION_CONTROL_FOR_IOS, settingsType: APP_VERSION)?->value ?? null)
-    <div class="footer-top">
-        <div class="container">
-            <div class="footer__wrapper">
-                <div class="footer__wrapper-widget">
-                    <div class="cont">
-                        <a href="{{ route('index') }}" class="logo">
-                            <img
-                                src="{{ $footerLogo ? dynamicStorage(path: "storage/app/public/business/".$footerLogo) : dynamicAsset(path: 'public/landing-page/assets/img/logo.png') }}"
-                                alt="logo">
-                        </a>
-                        <p>
-                            {!! $footerContent && $footerContent['title'] ? change_text_color_or_bg($footerContent['title']) : translate('Connect with our social media and other sites to keep up to date')!!}
-                        </p>
-                        <ul class="social-icons">
-                            @foreach($links as $link)
-                                @if($link->name == "facebook")
-                                    <li>
-                                        <a href="{{$link->link}}" target="_blank">
-                                            <img
-                                                src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/facebook.png') }}"
-                                                alt="img">
-                                        </a>
-                                    </li>
-                                @elseif($link->name == "instagram")
-                                    <li>
-                                        <a href="{{$link->link}}" target="_blank">
-                                            <img
-                                                src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/instagram.png') }}"
-                                                alt="img">
-                                        </a>
-                                    </li>
-                                @elseif($link->name == "twitter")
-                                    <li>
-                                        <a href="{{$link->link}}" target="_blank">
-                                            <img
-                                                src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/twitter.png') }}"
-                                                alt="img">
-                                        </a>
-                                    </li>
-                                @elseif($link->name == "linkedin")
-                                    <li>
-                                        <a href="{{$link->link}}" target="_blank">
-                                            <img
-                                                src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/linkedin.png') }}"
-                                                alt="img">
-                                        </a>
-                                    </li>
-                                @endif
-                            @endforeach
+@php($logo = getSession('header_logo'))
+@php($footerLogo = getSession('footer_logo'))
+@php($email = getSession('business_contact_email'))
+@php($contactNumber = getSession('business_contact_phone'))
+@php($businessAddress = getSession('business_address'))
+@php($businessName = getSession('business_name'))
+@php($footerContent = landingPageConfig(key: 'footer_contents', settingsType: FOOTER)?->value ?? null)
+@php($links = \Modules\BusinessManagement\Entities\SocialLink::where(['is_active'=>1])->orderBy('name','asc')->get())
+@php($driverAppVersionControlForAndroid = businessConfig(key: DRIVER_APP_VERSION_CONTROL_FOR_ANDROID, settingsType: APP_VERSION)?->value ?? null)
+@php($driverAppVersionControlForIos = businessConfig(key: DRIVER_APP_VERSION_CONTROL_FOR_IOS, settingsType: APP_VERSION)?->value ?? null)
+@php($customerAppVersionControlForAndroid = businessConfig(key: CUSTOMER_APP_VERSION_CONTROL_FOR_ANDROID, settingsType: APP_VERSION)?->value ?? null)
+@php($customerAppVersionControlForIos = businessConfig(key: CUSTOMER_APP_VERSION_CONTROL_FOR_IOS, settingsType: APP_VERSION)?->value ?? null)
 
-                        </ul>
-                        <div class="app-btns">
-                            @if($customerAppVersionControlForAndroid || $customerAppVersionControlForIos)
-                                <div class="me-xl-4">
-                                    <h6 class="text-white mb-3 font-regular">User App</h6>
-                                    <div class="d-flex gap-3 flex-column">
-                                        @if($customerAppVersionControlForAndroid)
-                                            <a target="_blank" type="button"
-                                               href="{{ $customerAppVersionControlForAndroid['app_url'] }}">
-                                                <img
-                                                    src="{{ dynamicAsset(path: 'public/landing-page/assets/img/play-store.png') }}"
-                                                    class="w-115px" alt="">
-                                            </a>
-                                        @endif
-                                        @if($customerAppVersionControlForIos)
-                                            <a target="_blank" type="button"
-                                               href="{{ $customerAppVersionControlForIos['app_url'] }}">
-                                                <img
-                                                    src="{{ dynamicAsset(path: 'public/landing-page/assets/img/app-store.png') }}"
-                                                    class="w-115px" alt="">
-                                            </a>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-                            @if($driverAppVersionControlForAndroid || $driverAppVersionControlForIos)
-                                <div>
-                                    <h6 class="text-white mb-3 font-regular">Driver App</h6>
-                                    <div class="d-flex gap-3 flex-column">
-                                        @if($driverAppVersionControlForAndroid)
-                                            <a target="_blank" type="button"
-                                               href="{{ $driverAppVersionControlForAndroid['app_url'] }}">
-                                                <img
-                                                    src="{{ dynamicAsset(path: 'public/landing-page/assets/img/app-store.png') }}"
-                                                    class="w-115px" alt="">
-                                            </a>
-                                        @endif
-                                        @if($driverAppVersionControlForIos)
-                                            <a target="_blank" type="button"
-                                               href="{{ $driverAppVersionControlForIos['app_url'] }}">
-                                                <img
-                                                    src="{{ dynamicAsset(path: 'public/landing-page/assets/img/play-store.png') }}"
-                                                    class="w-115px" alt="">
-                                            </a>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
+<style>
+    .xe-footer {
+        background: var(--footer);
+        color: #e0e0e0;
+        padding: 60px 0 0;
+        margin-top: 60px;
+    }
+    .xe-footer-grid {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+        gap: 40px;
+        padding-bottom: 50px;
+    }
+    @media (max-width: 991px) {
+        .xe-footer-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+    }
+    @media (max-width: 575px) {
+        .xe-footer-grid {
+            grid-template-columns: 1fr;
+            gap: 35px;
+        }
+    }
+    .xe-footer-brand .logo img {
+        max-width: 180px;
+        margin-bottom: 20px;
+    }
+    .xe-footer-brand p {
+        color: #b0b0b0;
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 24px;
+        max-width: 320px;
+    }
+    .xe-footer-social {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 28px;
+    }
+    .xe-footer-social a {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    .xe-footer-social a:hover {
+        background: var(--text-primary);
+        transform: translateY(-3px);
+    }
+    .xe-footer-social a img {
+        width: 18px;
+        height: 18px;
+    }
+    .xe-footer-apps {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .xe-footer-apps .app-group h6 {
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .xe-footer-apps .app-group .app-links {
+        display: flex;
+        gap: 8px;
+        flex-direction: column;
+    }
+    .xe-footer-apps .app-group .app-links a {
+        transition: transform 0.3s ease;
+    }
+    .xe-footer-apps .app-group .app-links a:hover {
+        transform: translateY(-2px);
+    }
+    .xe-footer-col h5 {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 12px;
+    }
+    .xe-footer-col h5::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 35px;
+        height: 3px;
+        background: var(--text-primary);
+        border-radius: 2px;
+    }
+    .xe-footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .xe-footer-links li {
+        margin-bottom: 12px;
+    }
+    .xe-footer-links li a {
+        color: #b0b0b0;
+        font-size: 14px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .xe-footer-links li a::before {
+        content: '\203A';
+        color: var(--text-primary);
+        font-weight: bold;
+        font-size: 18px;
+        transition: transform 0.3s ease;
+    }
+    .xe-footer-links li a:hover {
+        color: #fff;
+        padding-left: 5px;
+    }
+    .xe-footer-contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+    .xe-footer-contact-item .icon-wrap {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s ease;
+    }
+    .xe-footer-contact-item .icon-wrap img {
+        width: 20px;
+        height: 20px;
+    }
+    .xe-footer-contact-item:hover .icon-wrap {
+        background: var(--text-primary);
+    }
+    .xe-footer-contact-item .info h6 {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+    .xe-footer-contact-item .info a,
+    .xe-footer-contact-item .info span {
+        color: #b0b0b0;
+        font-size: 13px;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        word-break: break-word;
+    }
+    .xe-footer-contact-item .info a:hover {
+        color: var(--text-primary);
+    }
+    .xe-footer-bottom {
+        background: rgba(0,0,0,0.2);
+        padding: 18px 0;
+        text-align: center;
+    }
+    .xe-footer-bottom p {
+        margin: 0;
+        color: #b0b0b0;
+        font-size: 13px;
+    }
+    .xe-footer-bottom p a {
+        color: var(--text-primary);
+        text-decoration: none;
+    }
+</style>
+
+<footer class="xe-footer">
+    <div class="container">
+        <div class="xe-footer-grid">
+            <!-- Brand Column -->
+            <div class="xe-footer-brand">
+                <a href="{{ route('index') }}" class="logo">
+                    <img
+                        src="{{ $footerLogo ? dynamicStorage(path: "storage/app/public/business/".$footerLogo) : dynamicAsset(path: 'public/landing-page/assets/img/logo.png') }}"
+                        alt="logo">
+                </a>
+                <p>
+                    {!! $footerContent && $footerContent['title'] ? change_text_color_or_bg($footerContent['title']) : translate('Connect with our social media and other sites to keep up to date')!!}
+                </p>
+                <div class="xe-footer-social">
+                    @foreach($links as $link)
+                        @if($link->name == "facebook")
+                            <a href="{{$link->link}}" target="_blank" title="Facebook">
+                                <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/facebook.png') }}" alt="Facebook">
+                            </a>
+                        @elseif($link->name == "instagram")
+                            <a href="{{$link->link}}" target="_blank" title="Instagram">
+                                <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/instagram.png') }}" alt="Instagram">
+                            </a>
+                        @elseif($link->name == "twitter")
+                            <a href="{{$link->link}}" target="_blank" title="Twitter">
+                                <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/twitter.png') }}" alt="Twitter">
+                            </a>
+                        @elseif($link->name == "linkedin")
+                            <a href="{{$link->link}}" target="_blank" title="LinkedIn">
+                                <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/linkedin.png') }}" alt="LinkedIn">
+                            </a>
+                        @endif
+                    @endforeach
+                </div>
+                <div class="xe-footer-apps">
+                    @if($customerAppVersionControlForAndroid || $customerAppVersionControlForIos)
+                        <div class="app-group">
+                            <h6>User App</h6>
+                            <div class="app-links">
+                                @if($customerAppVersionControlForAndroid)
+                                    <a target="_blank" href="{{ $customerAppVersionControlForAndroid['app_url'] }}">
+                                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/play-store.png') }}" class="w-115px" alt="Google Play">
+                                    </a>
+                                @endif
+                                @if($customerAppVersionControlForIos)
+                                    <a target="_blank" href="{{ $customerAppVersionControlForIos['app_url'] }}">
+                                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/app-store.png') }}" class="w-115px" alt="App Store">
+                                    </a>
+                                @endif
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="footer__wrapper-widget">
-                    <ul class="footer__wrapper-link">
-                        <li>
-                            <a href="{{ route('index') }}">{{ translate('Home') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{route('about-us')}}">{{ translate('About Us') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('contact-us') }}">{{ translate('Contact Us') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('privacy') }}">{{ translate('Privacy Policy') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('terms') }}">{{ translate('Terms & Condition') }}</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="footer__wrapper-widget">
-                    <div class="footer__wrapper-contact">
-                        <img class="icon"
-                             src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/mail.png') }}"
-                             alt="footer">
-                        <h6>
-                            {{ translate('Send us Mail') }}
-                        </h6>
-                        <a href="Mailto:{{  $email ?? "contact@example.com" }}">{{  $email ?? "contact@example.com" }}</a>
-                    </div>
-                </div>
-                <div class="footer__wrapper-widget">
-                    <div class="footer__wrapper-contact">
-                        <img class="icon"
-                             src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/tel.png') }}"
-                             alt="footer">
-                        <h6>
-                            {{ translate('Contact Us') }}
-                        </h6>
-                        <div>
-                            <a href="Tel:{{ $contactNumber ?? "+90-327-539" }}">{{ $contactNumber ?? "+90-327-539" }}</a>
+                    @endif
+                    @if($driverAppVersionControlForAndroid || $driverAppVersionControlForIos)
+                        <div class="app-group">
+                            <h6>Driver App</h6>
+                            <div class="app-links">
+                                @if($driverAppVersionControlForAndroid)
+                                    <a target="_blank" href="{{ $driverAppVersionControlForAndroid['app_url'] }}">
+                                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/play-store.png') }}" class="w-115px" alt="Google Play">
+                                    </a>
+                                @endif
+                                @if($driverAppVersionControlForIos)
+                                    <a target="_blank" href="{{ $driverAppVersionControlForIos['app_url'] }}">
+                                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/app-store.png') }}" class="w-115px" alt="App Store">
+                                    </a>
+                                @endif
+                            </div>
                         </div>
-                        <a href={{ "Mailto:".$email ?? "Mailto:support@6amtech.com"}}>{{ $email ?? "support@6amtech.com"}}</a>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Quick Links Column -->
+            <div class="xe-footer-col">
+                <h5>{{ translate('Quick Links') }}</h5>
+                <ul class="xe-footer-links">
+                    <li><a href="{{ route('index') }}">{{ translate('Home') }}</a></li>
+                    <li><a href="{{ route('about-us') }}">{{ translate('About Us') }}</a></li>
+                    <li><a href="{{ route('contact-us') }}">{{ translate('Contact Us') }}</a></li>
+                    <li><a href="{{ route('privacy') }}">{{ translate('Privacy Policy') }}</a></li>
+                    <li><a href="{{ route('terms') }}">{{ translate('Terms & Condition') }}</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info Column -->
+            <div class="xe-footer-col">
+                <h5>{{ translate('Get In Touch') }}</h5>
+                <div class="xe-footer-contact-item">
+                    <div class="icon-wrap">
+                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/mail.png') }}" alt="Email">
+                    </div>
+                    <div class="info">
+                        <h6>{{ translate('Email Us') }}</h6>
+                        <a href="Mailto:{{ $email ?? 'contact@example.com' }}">{{ $email ?? 'contact@example.com' }}</a>
                     </div>
                 </div>
-                <div class="footer__wrapper-widget">
-                    <div class="footer__wrapper-contact">
-                        <img class="icon"
-                             src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/pin.png') }}"
-                             alt="footer">
-                        <h6>
-                            {{ translate('Send us Mail') }}
-                        </h6>
-                        <div>
-                            {{ $businessAddress ? $businessAddress : "510 Kampong Bahru Rd Singapore 099446" }}
-                        </div>
+                <div class="xe-footer-contact-item">
+                    <div class="icon-wrap">
+                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/tel.png') }}" alt="Phone">
                     </div>
+                    <div class="info">
+                        <h6>{{ translate('Call Us') }}</h6>
+                        <a href="Tel:{{ $contactNumber ?? '+255000000000' }}">{{ $contactNumber ?? '+255000000000' }}</a>
+                    </div>
+                </div>
+                <div class="xe-footer-contact-item">
+                    <div class="icon-wrap">
+                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/footer/pin.png') }}" alt="Address">
+                    </div>
+                    <div class="info">
+                        <h6>{{ translate('Visit Us') }}</h6>
+                        <span>{{ $businessAddress ?? 'Dar es Salaam, Tanzania' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App Download Column -->
+            <div class="xe-footer-col">
+                <h5>{{ translate('Download App') }}</h5>
+                <p style="color: #b0b0b0; font-size: 14px; line-height: 1.7; margin-bottom: 20px;">
+                    {{ translate('Download our mobile apps for the best experience on your device.') }}
+                </p>
+                <div class="xe-footer-apps" style="flex-direction: column; gap: 20px;">
+                    @if($customerAppVersionControlForAndroid || $customerAppVersionControlForIos)
+                        <div class="app-group">
+                            <h6>User App</h6>
+                            <div class="app-links" style="flex-direction: row; flex-wrap: wrap;">
+                                @if($customerAppVersionControlForAndroid)
+                                    <a target="_blank" href="{{ $customerAppVersionControlForAndroid['app_url'] }}">
+                                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/play-store.png') }}" class="w-115px" alt="Google Play">
+                                    </a>
+                                @endif
+                                @if($customerAppVersionControlForIos)
+                                    <a target="_blank" href="{{ $customerAppVersionControlForIos['app_url'] }}">
+                                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/app-store.png') }}" class="w-115px" alt="App Store">
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+                    @if($driverAppVersionControlForAndroid || $driverAppVersionControlForIos)
+                        <div class="app-group">
+                            <h6>Driver App</h6>
+                            <div class="app-links" style="flex-direction: row; flex-wrap: wrap;">
+                                @if($driverAppVersionControlForAndroid)
+                                    <a target="_blank" href="{{ $driverAppVersionControlForAndroid['app_url'] }}">
+                                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/play-store.png') }}" class="w-115px" alt="Google Play">
+                                    </a>
+                                @endif
+                                @if($driverAppVersionControlForIos)
+                                    <a target="_blank" href="{{ $driverAppVersionControlForIos['app_url'] }}">
+                                        <img src="{{ dynamicAsset(path: 'public/landing-page/assets/img/app-store.png') }}" class="w-115px" alt="App Store">
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-    <div class="footer-bottom text-center py-3">
-        {{getSession('copyright_text')}}
+    <div class="xe-footer-bottom">
+        <p>{!! getSession('copyright_text') !!}</p>
     </div>
 </footer>
