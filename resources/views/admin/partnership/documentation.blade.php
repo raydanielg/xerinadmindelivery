@@ -26,13 +26,45 @@
             overflow-x: auto;
         }
         .api-doc .card { margin-bottom: 1.5rem; }
+
+        @media print {
+            @page { margin: 1.5cm; }
+            body * { visibility: hidden; }
+            .print-area, .print-area * { visibility: visible; }
+            .print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0 !important;
+            }
+            .print-hide { display: none !important; }
+            .api-doc pre {
+                background: #f5f5f5 !important;
+                color: #333 !important;
+                border: 1px solid #ddd;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            .api-doc .endpoint {
+                border: 1px solid #ddd;
+                background: #f8f9fa !important;
+            }
+            .api-doc .card {
+                border: 1px solid #ccc !important;
+                page-break-inside: avoid;
+                box-shadow: none !important;
+            }
+            .api-doc h4 { page-break-after: avoid; }
+            .print-only { display: block !important; }
+        }
     </style>
 @endpush
 
 @section('content')
-    <div class="main-content">
+    <div class="main-content print-area">
         <div class="container-fluid">
-            <div class="mb-4 d-flex justify-content-between align-items-center">
+            <div class="mb-4 d-flex justify-content-between align-items-center print-hide">
                 <h2 class="fs-22 text-capitalize">{{ translate('API Documentation') }}</h2>
                 <div class="d-flex gap-2">
                     <button onclick="window.print()" class="btn btn-outline-primary">
@@ -42,6 +74,11 @@
                         <i class="bi bi-arrow-left"></i> {{ translate('Back') }}
                     </a>
                 </div>
+            </div>
+
+            <div class="print-only mb-4" style="display:none;">
+                <h2>{{ translate('API Documentation') }}</h2>
+                <hr>
             </div>
 
             <div class="row">
