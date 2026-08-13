@@ -314,8 +314,12 @@
 
                 if (drawPolyline) drawPolyline.setMap(null);
                 if (drawPoints.length >= 2) {
+                    let previewPath = [...drawPoints];
+                    if (drawPoints.length >= 3) {
+                        previewPath.push(drawPoints[0]);
+                    }
                     drawPolyline = new google.maps.Polyline({
-                        path: drawPoints,
+                        path: previewPath,
                         strokeColor: '#0c67a3',
                         strokeOpacity: 0.8,
                         strokeWeight: 2,
