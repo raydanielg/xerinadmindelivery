@@ -35,7 +35,7 @@
                                                     <div class="flex-shrink-0 rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
                                                         <img src="{{dynamicAsset('public/assets/admin-module/img/svg/map-draw.svg') }}" class="svg" alt="" style="width: 20px; height: 20px;">
                                                     </div>
-                                                    <p class="mb-0 fs-14">{{ translate('click_this_icon_to_start_pin_points_in_the_map_and_connect_them_to_draw_a_zone_._Minimum_3_points_required') }}</p>
+                                                    <p class="mb-0 fs-14">{{ translate('click_this_icon_to_start_pin_points_in_the_map_and_connect_them_to_draw_a_zone_._Minimum_3_points_required._Click_Draw_Zone_again_to_finish') }}</p>
                                                 </div>
 
                                                 <div class="rounded bg-white p-3 text-center">
@@ -609,7 +609,7 @@
             clearDrawing();
             isDrawing = true;
             map.setOptions({ draggableCursor: 'crosshair' });
-            toastr.info('{{ translate("click_on_map_to_add_points._double-click_or_click_Draw_Zone_again_to_finish._minimum_3_points_required") }}');
+            toastr.info('{{ translate("click_on_map_to_add_points._click_Draw_Zone_again_to_finish._minimum_3_points_required") }}');
         }
 
         function finishDrawing() {
@@ -724,12 +724,6 @@
                         map: map
                     });
                 }
-            });
-
-            map.addListener('dblclick', (e) => {
-                if (!isDrawing) return;
-                e.stop();
-                finishDrawing();
             });
 
             if (navigator.geolocation) {

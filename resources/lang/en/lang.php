@@ -4682,4 +4682,7 @@
   'With OTP Login, customers can log in using their phone number without password.' => 'With OTP Login, customers can log in using their phone number without password.',
   'By enabling manual login, customers will get the option to create an account and log in using the necessary credentials & password in the app & website' => 'By enabling manual login, customers will get the option to create an account and log in using the necessary credentials & password in the app & website',
   'The option you select customer will have the option to login customer app' => 'The option you select customer will have the option to login customer app',
+  'click_on_map_to_add_points._click_Draw_Zone_again_to_finish._minimum_3_points_required' => 'Click on map to add points. Click "Draw Zone" button again to finish. Minimum 3 points required.',
+  'minimum_3_points_required_to_create_a_zone' => 'Minimum 3 points required to create a zone',
+  'click_this_icon_to_start_pin_points_in_the_map_and_connect_them_to_draw_a_zone_._Minimum_3_points_required._Click_Draw_Zone_again_to_finish' => 'Click this icon to start pin points in the map and connect them to draw a zone. Minimum 3 points required. Click "Draw Zone" again to finish.',
 );

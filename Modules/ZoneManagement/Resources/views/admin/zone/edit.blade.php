@@ -185,7 +185,7 @@
             clearDrawing();
             isDrawing = true;
             map.setOptions({ draggableCursor: 'crosshair' });
-            toastr.info('{{ translate("click_on_map_to_add_points._double-click_or_click_Draw_Zone_again_to_finish._minimum_3_points_required") }}');
+            toastr.info('{{ translate("click_on_map_to_add_points._click_Draw_Zone_again_to_finish._minimum_3_points_required") }}');
         }
 
         function finishDrawing() {
@@ -322,12 +322,6 @@
                         map: map
                     });
                 }
-            });
-
-            map.addListener('dblclick', (e) => {
-                if (!isDrawing) return;
-                e.stop();
-                finishDrawing();
             });
 
             // Create the search box and link it to the UI element.
