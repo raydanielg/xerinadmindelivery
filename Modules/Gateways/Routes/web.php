@@ -1,20 +1,10 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 use Modules\Gateways\Http\Controllers\AzampesaController;
 use Modules\Gateways\Http\Controllers\SelcomController;
+use Modules\Gateways\Http\Controllers\Web\Admin\SmsLogController;
 
 Route::group(['prefix' => 'payment'], function () {
 
@@ -34,5 +24,17 @@ Route::group(['prefix' => 'payment'], function () {
             ->withoutMiddleware([VerifyCsrfToken::class]);
         Route::any('webhook', [SelcomController::class, 'webhook'])->name('webhook')
             ->withoutMiddleware([VerifyCsrfToken::class]);
+    });
+});
+
+// Admin SMS Logs Routes
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
+    Route::group(['prefix' => 'gateways', 'as' => 'gateways.'], function () {
+        Route::group(['prefix' => 'sms-logs', 'as' => 'sms-logs.'], function () {
+            Route::get('/', [SmsLogController::class, 'index'])->name('index');
+            Route::get('/{id}', [SmsLogController::class, 'show'])->name('show');
+            Route::delete('/{id}', [SmsLogController::class, 'destroy'])->name('destroy');
+            Route::post('/clear', [SmsLogController::class, 'clearAll'])->name('clear');
+        });
     });
 });

@@ -82,7 +82,10 @@ trait  SmsGateway
             return self::alphanet_sms($receiver, $otp);
         }
 
-
+        $config = self::get_settings('mshastra_sms');
+        if (isset($config) && $config['status'] == 1) {
+            return self::mshastra_sms($receiver, $otp);
+        }
 
         return 'not_found';
     }
@@ -605,7 +608,68 @@ trait  SmsGateway
         return $response;
     }
 
+    public static function mshastra_sms($receiver, $otp): string
+    {
+        $config = self::get_settings('mshastra_sms');
+        $response = 'error';
+        if (isset($config) && $config['status'] == 1) {
+            $logData = [
+                'gateway' => 'mshastra_sms',
+                'receiver' => $receiver,
+                'message' => str_replace("#OTP#", $otp, $config['otp_template'] ?? 'Your OTP is #OTP#'),
+                'type' => 'otp',
+            ];
+            try {
+                $message = str_replace("#OTP#", $otp, $config['otp_template']);
+                $receiver = str_replace("+", "", $receiver);
+                $cleanedPhone = preg_replace('/\D/', '', $receiver);
+                $lastNine = substr($cleanedPhone, -9);
+                $fullPhone = '255' . $lastNine;
 
+                $url = 'http://mshastra.com/sendsms_api_json.aspx';
+                $jsonData = array(
+                    array(
+                        "user" => $config['user'],
+                        "pwd" => $config['pwd'],
+                        "number" => $fullPhone,
+                        "msg" => $message,
+                        "sender" => $config['sender_id'],
+                        "language" => "English"
+                    )
+                );
+                $jsonDataEncoded = json_encode($jsonData);
+
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
+                $result = curl_exec($ch);
+                $err = curl_error($ch);
+                curl_close($ch);
+
+                $logData['response'] = $result;
+                if (!$err) {
+                    $response = 'success';
+                    $logData['status'] = 'success';
+                } else {
+                    $response = 'error';
+                    $logData['status'] = 'error';
+                    $logData['error_message'] = $err;
+                }
+            } catch (\Exception $exception) {
+                $response = 'error';
+                $logData['status'] = 'error';
+                $logData['error_message'] = $exception->getMessage();
+            }
+            try {
+                \Modules\Gateways\Entities\SmsLog::create($logData);
+            } catch (\Exception $e) {}
+        }
+        return $response;
+    }
 
     public static function get_settings($name)
     {

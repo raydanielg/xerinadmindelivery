@@ -685,6 +685,13 @@
                                     {{translate('3rd_party')}}
                                 </a>
                             </li>
+                            <li class="{{Request::is('admin/gateways/sms-logs*') ? 'active open' : ''}}">
+                                <a href="{{route('admin.gateways.sms-logs.index')}}"
+                                   class="text-capitalize">
+                                    <i class="bi bi-dash-lg"></i>
+                                    {{translate('SMS_Logs')}}
+                                </a>
+                            </li>
                             <li class="{{Request::is('admin/business/configuration/face-verification-api*') ? 'active open' : ''}}">
                                 <a href="{{route('admin.business.configuration.face-verification-api.index')}}"
                                    class="text-capitalize">
