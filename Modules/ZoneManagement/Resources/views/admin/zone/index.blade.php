@@ -527,6 +527,9 @@
         "use strict";
         //zone form submit
         $('#zone_form').on('submit', function (e) {
+            if (isDrawing && drawPoints.length >= 3) {
+                finishDrawing();
+            }
             if ($('#coordinates').val() === '') {
                 toastr.error('{{ translate('please_define_zone') }}')
                 e.preventDefault();
