@@ -5,6 +5,7 @@ import 'package:ride_sharing_user_app/features/auth/domain/models/sign_up_body.d
 import 'package:ride_sharing_user_app/features/auth/widgets/additional_field_widget.dart';
 import 'package:ride_sharing_user_app/features/auth/widgets/test_field_title.dart';
 import 'package:ride_sharing_user_app/helper/display_helper.dart';
+import 'package:ride_sharing_user_app/theme/theme_controller.dart';
 import 'package:ride_sharing_user_app/util/dimensions.dart';
 import 'package:ride_sharing_user_app/util/images.dart';
 import 'package:ride_sharing_user_app/util/styles.dart';

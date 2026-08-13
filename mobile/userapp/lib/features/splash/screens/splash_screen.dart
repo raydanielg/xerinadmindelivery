@@ -95,8 +95,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 Opacity(
                   opacity: _animation.value,
                   child: Padding(
-                    paddingImaEets.onlyGet.find<ThemeController>().darkTheme ? (left: 0ogoDarkMode : Im ge-.lo1o2i htM*de, width: 160 double.tryParse(_animation.value.toString())!))),
-                    child: SvgPicture.asset(Images.splashSvgLogo),
+                    padding: EdgeInsets.only(left: 120 - ((120 * double.tryParse(_animation.value.toString())!))),
+                    child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, width: 160),
                   ),
                 ),
                 SizedBox(height: Get.height * 0.25),
