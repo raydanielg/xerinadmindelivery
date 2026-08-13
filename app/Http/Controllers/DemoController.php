@@ -144,11 +144,20 @@ Parcel ID is {ParcelId} You can track this parcel from this link {TrackingLink}"
 
     public function smsGatewayTest(Request $request)
     {
+        $phone = $request->get('phone', '+255712345678');
         try {
-            self::send("+8801740128172", "1234");
-            dd("done");
+            $result = self::send($phone, "1234");
+            return response()->json([
+                'status' => $result,
+                'phone' => $phone,
+                'message' => $result === 'success' ? 'SMS sent successfully' : ($result === 'not_found' ? 'No active SMS gateway found' : 'SMS sending failed'),
+            ]);
         } catch (\Exception $exception) {
-            dd($exception->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'phone' => $phone,
+                'message' => $exception->getMessage(),
+            ], 500);
         }
     }
 

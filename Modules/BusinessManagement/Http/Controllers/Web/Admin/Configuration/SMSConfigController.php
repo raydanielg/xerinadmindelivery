@@ -7,6 +7,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -14,6 +15,8 @@ use Illuminate\View\View;
 use Modules\BusinessManagement\Http\Requests\SmsSettingSetupStoreOrUpdateRequest;
 use Modules\BusinessManagement\Service\Interfaces\SettingServiceInterface;
 use Modules\Gateways\Traits\Processor;
+use Modules\Gateways\Traits\SmsGateway;
+use Modules\Gateways\Traits\SmsGatewayForMessage;
 
 class SMSConfigController extends BaseController
 {
@@ -47,5 +50,54 @@ class SMSConfigController extends BaseController
         $this->settingService->storeOrUpdateSMSSetting($request->validated());
         Toastr::success(DEFAULT_UPDATE_200['message']);
         return back();
+    }
+
+    public function testSms(Request $request): JsonResponse
+    {
+        $request->validate([
+            'phone' => 'required|string',
+            'gateway' => 'required|string',
+        ]);
+
+        $gateway = $request->input('gateway');
+        $phone = $request->input('phone');
+        $message = $request->input('message', 'Test SMS from Xerin Express. Your OTP is 1234');
+
+        try {
+            $config = \Modules\Gateways\Traits\SmsGateway::get_settings($gateway);
+
+            if (!isset($config) || $config['status'] != 1) {
+                return response()->json([
+                    'success' => false,
+                    'message' => ucfirst(str_replace('_', ' ', $gateway)) . ' gateway is not active. Please activate it first.',
+                ]);
+            }
+
+            $otp = '1234';
+            $result = 'not_found';
+
+            if (method_exists(SmsGateway::class, $gateway)) {
+                $result = SmsGateway::{$gateway}($phone, $otp);
+            } elseif (method_exists(SmsGatewayForMessage::class, $gateway)) {
+                $result = SmsGatewayForMessage::{$gateway}($phone, $message, $config);
+            }
+
+            if ($result === 'success') {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'SMS sent successfully to ' . $phone . ' via ' . ucfirst(str_replace('_', ' ', $gateway)),
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'SMS sending failed via ' . ucfirst(str_replace('_', ' ', $gateway)) . '. Check SMS logs for details.',
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+            ]);
+        }
     }
 }

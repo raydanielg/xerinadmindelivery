@@ -193,6 +193,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], f
                     Route::controller(SMSConfigController::class)->group(function () {
                         Route::get('/', 'smsConfigGet')->name('index');
                         Route::put('update', 'smsConfigSet')->name('update');
+                        Route::post('test', 'testSms')->name('test');
                     });
                 });
                 Route::group(['prefix' => 'firebase-otp', 'as' => 'firebase-otp.'], function () {

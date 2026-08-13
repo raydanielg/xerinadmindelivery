@@ -75,11 +75,16 @@
                                                 @endif
                                             @endforeach
                                         </div>
-                                        <div class="d-flex justify-content-end">
-                                            <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}" class="btn btn-primary call-demo">
-                                                {{translate('update')}}
-                                            </button>
-                                        </div>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}" class="btn btn-primary call-demo">
+                                            {{translate('update')}}
+                                        </button>
+                                        <button type="button" class="btn btn-outline-info test-sms-btn"
+                                                data-gateway="{{$gateway->key_name}}"
+                                                data-bs-toggle="modal" data-bs-target="#testSmsModal">
+                                            <i class="bi bi-send"></i> Test SMS
+                                        </button>
+                                    </div>
                                     </form>
                                 </div>
                             </div>
@@ -92,4 +97,109 @@
         </div>
     </div>
     <!-- End Main Content -->
+
+    <!-- Test SMS Modal -->
+    <div class="modal fade" id="testSmsModal" tabindex="-1" aria-labelledby="testSmsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="testSmsModalLabel">
+                        <i class="bi bi-send"></i> Test SMS Gateway
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Gateway</label>
+                        <input type="text" class="form-control" id="testSmsGateway" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Phone Number *</label>
+                        <input type="text" class="form-control" id="testSmsPhone" placeholder="e.g. +255712345678" value="+255712345678">
+                        <small class="text-muted">Enter phone number with country code</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Message (optional)</label>
+                        <textarea class="form-control" id="testSmsMessage" rows="3" placeholder="Test SMS from Xerin Express. Your OTP is 1234">Test SMS from Xerin Express. Your OTP is 1234</textarea>
+                    </div>
+                    <div id="testSmsResult" class="alert d-none"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="sendTestSmsBtn">
+                        <i class="bi bi-send"></i> Send Test SMS
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('script')
+<script>
+    (function() {
+        const testSmsModal = document.getElementById('testSmsModal');
+        const testSmsGateway = document.getElementById('testSmsGateway');
+        const testSmsPhone = document.getElementById('testSmsPhone');
+        const testSmsMessage = document.getElementById('testSmsMessage');
+        const testSmsResult = document.getElementById('testSmsResult');
+        const sendTestSmsBtn = document.getElementById('sendTestSmsBtn');
+
+        let selectedGateway = '';
+
+        document.querySelectorAll('.test-sms-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                selectedGateway = this.getAttribute('data-gateway');
+                testSmsGateway.value = selectedGateway.replace(/_/g, ' ').replace(/\b\w/g, function(c) {
+                    return c.toUpperCase();
+                });
+                testSmsResult.classList.add('d-none');
+            });
+        });
+
+        sendTestSmsBtn.addEventListener('click', function() {
+            const phone = testSmsPhone.value.trim();
+            const message = testSmsMessage.value.trim();
+
+            if (!phone) {
+                testSmsResult.className = 'alert alert-danger';
+                testSmsResult.textContent = 'Please enter a phone number';
+                testSmsResult.classList.remove('d-none');
+                return;
+            }
+
+            sendTestSmsBtn.disabled = true;
+            sendTestSmsBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
+            testSmsResult.classList.add('d-none');
+
+            fetch('{{route("admin.business.configuration.third-party.sms-gateway.test")}}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{csrf_token()}}',
+                },
+                body: JSON.stringify({
+                    phone: phone,
+                    gateway: selectedGateway,
+                    message: message,
+                }),
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                testSmsResult.className = 'alert ' + (data.success ? 'alert-success' : 'alert-danger');
+                testSmsResult.textContent = data.message;
+                testSmsResult.classList.remove('d-none');
+            })
+            .catch(function(error) {
+                testSmsResult.className = 'alert alert-danger';
+                testSmsResult.textContent = 'Request failed: ' + error.message;
+                testSmsResult.classList.remove('d-none');
+            })
+            .finally(function() {
+                sendTestSmsBtn.disabled = false;
+                sendTestSmsBtn.innerHTML = '<i class="bi bi-send"></i> Send Test SMS';
+            });
+        });
+    })();
+</script>
+@endpush

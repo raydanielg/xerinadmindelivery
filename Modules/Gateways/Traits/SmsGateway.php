@@ -648,16 +648,33 @@ trait  SmsGateway
 
                 $result = curl_exec($ch);
                 $err = curl_error($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
 
                 $logData['response'] = $result;
-                if (!$err) {
-                    $response = 'success';
-                    $logData['status'] = 'success';
+                if (!$err && $httpCode >= 200 && $httpCode < 300) {
+                    $resultDecoded = json_decode($result, true);
+                    if (is_array($resultDecoded) && isset($resultDecoded[0]['status'])) {
+                        if (strtolower($resultDecoded[0]['status']) === 'ok' || strtolower($resultDecoded[0]['status']) === 'success') {
+                            $response = 'success';
+                            $logData['status'] = 'success';
+                        } else {
+                            $response = 'error';
+                            $logData['status'] = 'error';
+                            $logData['error_message'] = $result;
+                        }
+                    } elseif (is_string($result) && stripos($result, 'error') === false && stripos($result, 'fail') === false) {
+                        $response = 'success';
+                        $logData['status'] = 'success';
+                    } else {
+                        $response = 'error';
+                        $logData['status'] = 'error';
+                        $logData['error_message'] = $result ?: 'Empty response from gateway';
+                    }
                 } else {
                     $response = 'error';
                     $logData['status'] = 'error';
-                    $logData['error_message'] = $err;
+                    $logData['error_message'] = $err ?: "HTTP $httpCode";
                 }
             } catch (\Exception $exception) {
                 $response = 'error';
