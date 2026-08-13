@@ -30,6 +30,9 @@
 
 
     // Initialize Firebase
+    if (typeof firebase === 'undefined') {
+        console.warn('Firebase SDK failed to load. Push notifications will not work.');
+    } else {
     firebase.initializeApp({
         apiKey: "{{ businessConfig(key: 'api_key',settingsType: NOTIFICATION_SETTINGS)?->value ?? 'AIzaSyAcEVgv9R639z4B8VdxQNeBIfkg2ME7Opw' }}",
         authDomain: "{{ businessConfig(key: 'auth_domain',settingsType: NOTIFICATION_SETTINGS)?->value ?? 'zerinexpress-1401c.firebaseapp.com' }}",
@@ -97,6 +100,7 @@
         }
     })
     startFCM();
+    } // end of else (firebase defined)
 
     function fetchSafetyAlertIcon(condition = false) {
         let url = "{{ route('admin.fleet-map-safety-alert-icon-in-map') }}";
