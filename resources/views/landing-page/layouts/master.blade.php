@@ -57,7 +57,7 @@
     <!-- Structured Data: Organization -->
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": "Organization",
         "name": "{{ $businessName ?? 'Zerin Express' }}",
         "url": "{{ config('app.url', 'https://zerinexpress.com') }}",
@@ -77,7 +77,7 @@
     <!-- Structured Data: WebSite with SearchAction -->
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": "WebSite",
         "name": "{{ $businessName ?? 'Zerin Express' }}",
         "url": "{{ config('app.url', 'https://zerinexpress.com') }}",

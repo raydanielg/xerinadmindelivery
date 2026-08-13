@@ -7,7 +7,7 @@
 @push('seo')
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": "ContactPage",
         "name": "Contact Us",
         "url": "{{ config('app.url', 'https://zerinexpress.com') }}/contact-us"

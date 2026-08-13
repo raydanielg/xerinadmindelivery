@@ -17,7 +17,7 @@
         <meta property="og:type" content="article">
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
+            "@@context": "https://schema.org",
             "@type": "BlogPosting",
             "headline": "{{ $metaTitle }}",
             "description": "{{ $metaDescription }}",

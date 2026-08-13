@@ -12,7 +12,7 @@
 @push('seo')
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": "Service",
         "name": "Ride Sharing & Delivery Service",
         "serviceType": "Transportation and Delivery",
@@ -30,7 +30,7 @@
     </script>
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": "MobileApplication",
         "name": "{{ $businessName ?? 'Zerin Express' }} User App",
         "operatingSystem": "ANDROID, iOS",
