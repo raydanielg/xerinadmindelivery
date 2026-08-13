@@ -514,6 +514,12 @@
 
 @push('script')
     @php($map_key = businessConfig(GOOGLE_MAP_API)?->value['map_api_key'] ?? null)
+    @if(!$map_key)
+        <div class="alert alert-warning m-3">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            {{ translate('Google Maps API key is not configured. Please set it in Business Settings > Configuration > Google Map.') }}
+        </div>
+    @endif
     <script
         src="https://maps.googleapis.com/maps/api/js?key={{ $map_key }}&libraries=drawing,places&v=3.50"></script>
     <script src="{{dynamicAsset('public/assets/admin-module/js/zone-management/zone/index.js') }}"></script>
@@ -579,14 +585,18 @@
             }
             map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
             drawingManager = new google.maps.drawing.DrawingManager({
-                drawingMode: google.maps.drawing.OverlayType.POLYGON,
+                drawingMode: null,
                 drawingControl: true,
                 drawingControlOptions: {
                     position: google.maps.ControlPosition.TOP_CENTER,
                     drawingModes: [google.maps.drawing.OverlayType.POLYGON]
                 },
                 polygonOptions: {
-                    editable: true
+                    editable: true,
+                    fillColor: '#0c67a3',
+                    fillOpacity: 0.2,
+                    strokeColor: '#0c67a3',
+                    strokeWeight: 2
                 }
             });
             drawingManager.setMap(map);
@@ -671,6 +681,8 @@
                 });
                 map.fitBounds(bounds);
             });
+
+            set_all_zones();
         }
 
         window.addEventListener('load', initialize);
@@ -694,8 +706,6 @@
                 },
             });
         }
-
-        set_all_zones();
 
         $("#allZoneExtraFareSetup").on('click', function () {
             $('#allZoneExtraFareSetupModal').modal('show');
