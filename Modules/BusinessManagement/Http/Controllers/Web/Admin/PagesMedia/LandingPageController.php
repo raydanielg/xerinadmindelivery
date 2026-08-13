@@ -257,6 +257,11 @@ class LandingPageController extends BaseController
     public function deleteTestimonial($id)
     {
         $this->authorize('business_edit');
+        $testimonial = $this->landingPageSectionService->findOneBy(criteria: ['id' => $id]);
+        if (!$testimonial) {
+            Toastr::error('Testimonial not found');
+            return back();
+        }
         $this->landingPageSectionService->delete(id: $id);
 
         Toastr::success(TESTIMONIAL_DELETE_200['message']);

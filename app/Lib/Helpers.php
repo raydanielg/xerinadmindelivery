@@ -106,6 +106,7 @@ if (!function_exists('fileUploader')) {
         }
 
         set_time_limit(300);
+        ini_set('memory_limit', '512M');
         $dir = rtrim($dir, '/') . '/';
 
         if(in_array($format, ['txt', 'rtf', 'doc', 'docx', 'pdf', 'odt', 'xls', 'xlsx', 'csv', 'ppt', 'pptx', 'log', 'zip', 'mp4', 'mkv', 'avi', 'mov', 'webm']))
