@@ -12,11 +12,6 @@ use Modules\Gateways\Entities\SmsLog;
 
 class SmsLogController extends BaseController
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function index(?Request $request, ?string $type = null): View|Collection|LengthAwarePaginator|null|callable|RedirectResponse
     {
         $query = SmsLog::query();
