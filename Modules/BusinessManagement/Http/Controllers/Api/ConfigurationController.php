@@ -40,23 +40,6 @@ class ConfigurationController extends Controller
 
     public function getExternalConfiguration(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'mart_base_url' => 'required',
-            'mart_token' => 'required',
-            'Xerin Express Delivery_token' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['status' => false]);
-        }
-        $activationMode = externalConfig('activation_mode')?->value;
-        $martBaseUrl = externalConfig('mart_base_url')?->value;
-        $martToken = externalConfig('mart_token')?->value;
-        $systemSelfToken = externalConfig('system_self_token')?->value;
-        if ($activationMode == 1 && $request->mart_base_url == $martBaseUrl && $request->mart_token == $martToken && $request->Xerin Express Delivery_token == $systemSelfToken) {
-            return response()->json(['status' => true]);
-        }
-
         return response()->json(['status' => false]);
     }
 

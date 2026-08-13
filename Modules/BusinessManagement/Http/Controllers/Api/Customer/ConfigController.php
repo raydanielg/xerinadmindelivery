@@ -61,26 +61,6 @@ class ConfigController extends Controller
             ->where('key_name', 'loyalty_points')
             ->firstWhere('settings_type', 'customer_settings')?->value;
         $martExternalSetting = false;
-        if (checkSelfExternalConfiguration()) {
-            $martBaseUrl = externalConfig('mart_base_url')?->value;
-            $systemSelfToken = externalConfig('system_self_token')?->value;
-            $martToken = externalConfig('mart_token')?->value;
-            try {
-                $response = Http::get($martBaseUrl . '/api/v1/configurations/get-external',
-                    [
-                        'mart_token' => $martToken,
-                        'Xerin Express Delivery_base_url' => url('/'),
-                        'Xerin Express Delivery_token' => $systemSelfToken,
-                    ]);
-                if ($response->successful()) {
-                    $martResponse = $response->json();
-                    $martExternalSetting = $martResponse['status'];
-                }
-            } catch (\Exception $exception) {
-
-            }
-
-        }
         $appVersions = $this->businessSettingService->getBy(criteria: ['settings_type' => APP_VERSION]);
         $dataValues = $this->settingService->getBy(criteria: ['settings_type' => SMS_CONFIG]);
         if ($dataValues->where('live_values.status', 1)->isEmpty()) {
