@@ -34,13 +34,13 @@
         console.warn('Firebase SDK failed to load. Push notifications will not work.');
     } else {
     firebase.initializeApp({
-        apiKey: "{{ businessConfig(key: 'api_key',settingsType: NOTIFICATION_SETTINGS)?->value ?? 'AIzaSyAcEVgv9R639z4B8VdxQNeBIfkg2ME7Opw' }}",
-        authDomain: "{{ businessConfig(key: 'auth_domain',settingsType: NOTIFICATION_SETTINGS)?->value ?? 'zerinexpress-1401c.firebaseapp.com' }}",
-        projectId: "{{ businessConfig(key: 'project_id',settingsType: NOTIFICATION_SETTINGS)?->value ?? 'zerinexpress-1401c' }}",
-        storageBucket: "{{ businessConfig(key: 'storage_bucket',settingsType: NOTIFICATION_SETTINGS)?->value ?? 'zerinexpress-1401c.firebasestorage.app' }}",
-        messagingSenderId: "{{ businessConfig(key: 'messaging_sender_id',settingsType: NOTIFICATION_SETTINGS)?->value ?? '56442076502' }}",
-        appId: "{{ businessConfig(key: 'app_id',settingsType: NOTIFICATION_SETTINGS)?->value ?? '1:56442076502:web:40cd6465903ddb0eb96af7' }}",
-        measurementId: "{{ businessConfig(key: 'measurement_id',settingsType: NOTIFICATION_SETTINGS)?->value ?? 'G-9M9EZDLDHX' }}",
+        apiKey: "{{ businessConfig(key: 'api_key',settingsType: NOTIFICATION_SETTINGS)?->value ?: 'AIzaSyAcEVgv9R639z4B8VdxQNeBIfkg2ME7Opw' }}",
+        authDomain: "{{ businessConfig(key: 'auth_domain',settingsType: NOTIFICATION_SETTINGS)?->value ?: 'zerinexpress-1401c.firebaseapp.com' }}",
+        projectId: "{{ businessConfig(key: 'project_id',settingsType: NOTIFICATION_SETTINGS)?->value ?: 'zerinexpress-1401c' }}",
+        storageBucket: "{{ businessConfig(key: 'storage_bucket',settingsType: NOTIFICATION_SETTINGS)?->value ?: 'zerinexpress-1401c.firebasestorage.app' }}",
+        messagingSenderId: "{{ businessConfig(key: 'messaging_sender_id',settingsType: NOTIFICATION_SETTINGS)?->value ?: '56442076502' }}",
+        appId: "{{ businessConfig(key: 'app_id',settingsType: NOTIFICATION_SETTINGS)?->value ?: '1:56442076502:web:40cd6465903ddb0eb96af7' }}",
+        measurementId: "{{ businessConfig(key: 'measurement_id',settingsType: NOTIFICATION_SETTINGS)?->value ?: 'G-9M9EZDLDHX' }}",
     });
 
 
