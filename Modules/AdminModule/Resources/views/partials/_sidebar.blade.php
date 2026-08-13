@@ -2,10 +2,10 @@
     <!-- Aside Header -->
     <div class="aside-header">
         <!-- Logo -->
-        <a href="{{route('admin.dashboard')}}" class="logo d-flex gap-2">
-            <img width="115"
-                 src="{{$logo ? dynamicStorage("storage/app/public/business/".$logo) : dynamicAsset('public/assets/admin-module/img/logo.png')}}"
-                 alt="" class="main-logo">
+        <a href="{{route('admin.dashboard')}}" class="logo d-flex gap-2 align-items-center">
+            <img src="{{$logo ? dynamicStorage("storage/app/public/business/".$logo) : dynamicAsset('public/assets/admin-module/img/logo.png')}}"
+                 alt="" class="main-logo"
+                 style="max-width: 130px; max-height: 40px; width: auto; height: auto; object-fit: contain;">
         </a>
         <!-- End Logo -->
 
