@@ -57,7 +57,7 @@ class _OtpSignUpScreenState extends State<OtpSignupScreen> {
               children: [
                 const SizedBox(height: Dimensions.paddingSizeOverLarge),
 
-                Image.asset(Images.logoWithName, height: 75, width: 200),
+                Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, height: 75, width: 200),
                 const SizedBox(height: Dimensions.paddingSizeOverLarge),
 
                 Text(

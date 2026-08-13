@@ -70,7 +70,7 @@ class _SignInScreenState extends State<SignInScreen> {
           return Center(child: SingleChildScrollView(child: Padding(
             padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Center(child: Image.asset(Images.logoWithName, height: 75, width: 200)),
+              Center(child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, height: 75, width: 200)),
               const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 
               Text(

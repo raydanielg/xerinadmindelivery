@@ -10,6 +10,7 @@ import 'package:ride_sharing_user_app/features/settings/domain/html_enum_types.d
 import 'package:ride_sharing_user_app/features/settings/screens/policy_screen.dart';
 import 'package:ride_sharing_user_app/helper/display_helper.dart';
 import 'package:ride_sharing_user_app/helper/svg_image_helper.dart';
+import 'package:ride_sharing_user_app/theme/theme_controller.dart';
 import 'package:ride_sharing_user_app/util/dimensions.dart';
 import 'package:ride_sharing_user_app/util/images.dart';
 import 'package:ride_sharing_user_app/util/styles.dart';
@@ -50,7 +51,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: [Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : LghMod
                     Center(child: Image.asset(Images.logoWithName, height: 75, width: 200)),
                     const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ride_sharing_user_app/common_widgets/button_widget.dart';
 import 'package:ride_sharing_user_app/features/splash/controllers/splash_controller.dart';
+import 'package:ride_sharing_user_app/theme/theme_controller.dart';
 import 'package:ride_sharing_user_app/util/app_constants.dart';
 import 'package:ride_sharing_user_app/util/dimensions.dart';
 import 'package:ride_sharing_user_app/util/images.dart';
@@ -24,7 +25,7 @@ class AppVersionWarningScreen extends StatelessWidget {
             child: Column(children: [
               const SizedBox(height: Dimensions.topSpace),
 
-              Image.asset(Images.logoWithName, height: 75),
+              Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, height: 75),
               const SizedBox(height: Dimensions.paddingSizeLarge),
 
               Image.asset(Images.appVersionWarningIcon, height: 150),

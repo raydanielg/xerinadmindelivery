@@ -8,6 +8,7 @@ import 'package:ride_sharing_user_app/features/auth/controllers/auth_controller.
 import 'package:ride_sharing_user_app/features/auth/domain/enums/verification_from_enum.dart';
 import 'package:ride_sharing_user_app/features/auth/screens/biometric_login_screen.dart';
 import 'package:ride_sharing_user_app/features/auth/screens/sign_up_screen.dart';
+import 'package:ride_sharing_user_app/theme/theme_controller.dart';
 import 'package:ride_sharing_user_app/features/auth/screens/verification_screen.dart';
 import 'package:ride_sharing_user_app/features/html/domain/html_enum_types.dart';
 import 'package:ride_sharing_user_app/features/html/screens/policy_viewer_screen.dart';
@@ -53,7 +54,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(child: Image.asset(Images.logoWithName, height: 75, width: 200)),
+                    Center(child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, height: 75, width: 200)),
                     const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 
                     FutureBuilder<String>(

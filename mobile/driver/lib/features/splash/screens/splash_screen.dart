@@ -11,6 +11,7 @@ import 'package:ride_sharing_user_app/features/location/controllers/location_con
 import 'package:ride_sharing_user_app/features/profile/controllers/profile_controller.dart';
 import 'package:ride_sharing_user_app/features/ride/controllers/ride_controller.dart';
 import 'package:ride_sharing_user_app/features/splash/controllers/splash_controller.dart';
+import 'package:ride_sharing_user_app/theme/theme_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   final Map<String,dynamic>? notificationData;
@@ -108,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                                 padding: EdgeInsets.only(
                                   left: 120 - ((120 * double.tryParse(_animation.value.toString())!)),
                                 ),
-                                child: Image.asset(Images.splashLogo, width: 160),
+                                child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, width: 160),
                               ),
                             ),
                             const SizedBox(height: 50),

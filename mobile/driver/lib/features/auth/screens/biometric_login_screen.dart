@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ride_sharing_user_app/common_widgets/loader_widget.dart';
 import 'package:ride_sharing_user_app/features/auth/controllers/auth_controller.dart';
+import 'package:ride_sharing_user_app/theme/theme_controller.dart';
 import 'package:ride_sharing_user_app/util/dimensions.dart';
 import 'package:ride_sharing_user_app/util/images.dart';
 import 'package:ride_sharing_user_app/util/styles.dart';
@@ -28,7 +29,7 @@ class BiometricLoginScreen extends StatelessWidget {
           Column(children: [
             const SizedBox(height: Dimensions.paddingSizeSignUp),
 
-            Center(child: Image.asset(Images.logoWithName, height: 60)),
+            Center(child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, height: 60)),
             SizedBox(height: Get.height * 0.1),
 
             Container(

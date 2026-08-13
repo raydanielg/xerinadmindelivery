@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:ride_sharing_user_app/helper/login_helper.dart';
 import 'package:ride_sharing_user_app/util/images.dart';
 import 'package:ride_sharing_user_app/features/splash/controllers/config_controller.dart';
+import 'package:ride_sharing_user_app/theme/theme_controller.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -94,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 Opacity(
                   opacity: _animation.value,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 120 - ((120 * double.tryParse(_animation.value.toString())!))),
+                    paddingImaEets.onlyGet.find<ThemeController>().darkTheme ? (left: 0ogoDarkMode : Im ge-.lo1o2i htM*de, width: 160 double.tryParse(_animation.value.toString())!))),
                     child: SvgPicture.asset(Images.splashSvgLogo),
                   ),
                 ),
