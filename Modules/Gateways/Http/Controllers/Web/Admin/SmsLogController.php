@@ -13,7 +13,7 @@ class SmsLogController extends BaseController
         parent::__construct();
     }
 
-    public function index(Request $request)
+    public function index(?Request $request, ?string $type = null)
     {
         $query = SmsLog::query();
 
