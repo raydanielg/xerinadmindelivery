@@ -50,13 +50,13 @@ class SmsLogController extends BaseController
         $gateways = SmsLog::distinct()->pluck('gateway')->filter();
         $types = SmsLog::distinct()->pluck('type')->filter();
 
-        return view('gateways::admin.sms-logs.index', compact('logs', 'stats', 'gateways', 'types'));
+        return view('Gateways::admin.sms-logs.index', compact('logs', 'stats', 'gateways', 'types'));
     }
 
     public function show($id)
     {
         $log = SmsLog::findOrFail($id);
-        return view('gateways::admin.sms-logs.show', compact('log'));
+        return view('Gateways::admin.sms-logs.show', compact('log'));
     }
 
     public function destroy($id)

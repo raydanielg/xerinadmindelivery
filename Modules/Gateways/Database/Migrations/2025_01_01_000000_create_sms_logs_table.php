@@ -8,21 +8,23 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('sms_logs', function (Blueprint $table) {
-            $table->id();
-            $table->string('gateway')->nullable();
-            $table->string('receiver')->nullable();
-            $table->text('message')->nullable();
-            $table->string('type')->default('otp')->comment('otp, message, notification');
-            $table->string('status')->default('pending')->comment('success, error, pending');
-            $table->text('response')->nullable();
-            $table->text('error_message')->nullable();
-            $table->timestamps();
+        if (!Schema::hasTable('sms_logs')) {
+            Schema::create('sms_logs', function (Blueprint $table) {
+                $table->id();
+                $table->string('gateway')->nullable();
+                $table->string('receiver')->nullable();
+                $table->text('message')->nullable();
+                $table->string('type')->default('otp')->comment('otp, message, notification');
+                $table->string('status')->default('pending')->comment('success, error, pending');
+                $table->text('response')->nullable();
+                $table->text('error_message')->nullable();
+                $table->timestamps();
 
-            $table->index(['status', 'created_at']);
-            $table->index('gateway');
-            $table->index('receiver');
-        });
+                $table->index(['status', 'created_at']);
+                $table->index('gateway');
+                $table->index('receiver');
+            });
+        }
     }
 
     public function down(): void

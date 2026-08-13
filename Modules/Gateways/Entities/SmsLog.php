@@ -3,12 +3,9 @@
 namespace Modules\Gateways\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SmsLog extends Model
 {
-    use HasFactory;
-
     protected $table = 'sms_logs';
 
     protected $fillable = [
