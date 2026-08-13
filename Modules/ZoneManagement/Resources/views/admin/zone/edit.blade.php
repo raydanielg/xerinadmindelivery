@@ -99,27 +99,29 @@
 @push('script')
     @php($map_key = businessConfig(GOOGLE_MAP_API)?->value['map_api_key'] ?? null)
 
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ $map_key }}&libraries=drawing,places&v=weekly&loading=async"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ $map_key }}&libraries=places&v=weekly&loading=async"></script>
     <script>
         "use strict";
-        auto_grow();
 
         function auto_grow() {
             let element = document.getElementById("coordinates");
-            element.style.height = "5px";
-            element.style.height = (element.scrollHeight) + "px";
+            if (element) {
+                element.style.height = "5px";
+                element.style.height = (element.scrollHeight) + "px";
+            }
         }
 
-        let map; // Global declaration of the map
+        let map;
         let lat_longs = new Array();
-        let drawingManager;
         let lastpolygon = null;
         let bounds = new google.maps.LatLngBounds();
         let polygons = [];
+        let isDrawing = false;
+        let drawPoints = [];
+        let drawMarkers = [];
+        let drawPolyline = null;
 
-
-        function resetMap(controlDiv) {
-            // Set CSS for the control border.
+        function createDrawButton(controlDiv, map) {
             const controlUI = document.createElement("div");
             controlUI.style.backgroundColor = "#fff";
             controlUI.style.border = "2px solid #fff";
@@ -129,24 +131,124 @@
             controlUI.style.marginTop = "8px";
             controlUI.style.marginBottom = "22px";
             controlUI.style.textAlign = "center";
-            controlUI.title = "Reset map";
+            controlUI.title = "Click to start drawing zone";
             controlDiv.appendChild(controlUI);
-            // Set CSS for the control interior.
+
             const controlText = document.createElement("div");
             controlText.style.color = "rgb(25,25,25)";
             controlText.style.fontFamily = "Roboto,Arial,sans-serif";
-            controlText.style.fontSize = "10px";
-            controlText.style.lineHeight = "16px";
-            controlText.style.paddingLeft = "2px";
-            controlText.style.paddingRight = "2px";
-            controlText.innerHTML = "X";
+            controlText.style.fontSize = "12px";
+            controlText.style.lineHeight = "20px";
+            controlText.style.paddingLeft = "8px";
+            controlText.style.paddingRight = "8px";
+            controlText.innerHTML = "Draw Zone";
             controlUI.appendChild(controlText);
-            // Setup the click event listeners: simply set the map to Chicago.
-            controlUI.addEventListener("click", () => {
-                lastpolygon.setMap(null);
-                $('#coordinates').val('');
 
+            controlUI.addEventListener("click", () => {
+                if (isDrawing) {
+                    finishDrawing();
+                } else {
+                    startDrawing();
+                }
             });
+        }
+
+        function createResetButton(controlDiv) {
+            const controlUI = document.createElement("div");
+            controlUI.style.backgroundColor = "#fff";
+            controlUI.style.border = "2px solid #fff";
+            controlUI.style.borderRadius = "3px";
+            controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+            controlUI.style.cursor = "pointer";
+            controlUI.style.marginTop = "8px";
+            controlUI.style.marginBottom = "22px";
+            controlUI.style.textAlign = "center";
+            controlUI.title = "Reset zone";
+            controlDiv.appendChild(controlUI);
+
+            const controlText = document.createElement("div");
+            controlText.style.color = "rgb(25,25,25)";
+            controlText.style.fontFamily = "Roboto,Arial,sans-serif";
+            controlText.style.fontSize = "12px";
+            controlText.style.lineHeight = "20px";
+            controlText.style.paddingLeft = "8px";
+            controlText.style.paddingRight = "8px";
+            controlText.innerHTML = "X Reset";
+            controlUI.appendChild(controlText);
+
+            controlUI.addEventListener("click", () => {
+                clearDrawing();
+            });
+        }
+
+        function startDrawing() {
+            clearDrawing();
+            isDrawing = true;
+            map.setOptions({ draggableCursor: 'crosshair' });
+            toastr.info('{{ translate("click_on_map_to_add_points._double-click_or_click_Draw_Zone_again_to_finish._minimum_3_points_required") }}');
+        }
+
+        function finishDrawing() {
+            if (drawPoints.length < 3) {
+                toastr.error('{{ translate("minimum_3_points_required_to_create_a_zone") }}');
+                return;
+            }
+            isDrawing = false;
+            map.setOptions({ draggableCursor: null });
+
+            if (lastpolygon) {
+                lastpolygon.setMap(null);
+            }
+
+            lastpolygon = new google.maps.Polygon({
+                paths: drawPoints,
+                strokeColor: '#0c67a3',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#0c67a3',
+                fillOpacity: 0.2,
+                editable: true,
+                map: map
+            });
+
+            const coords = drawPoints.map(p => new google.maps.LatLng(p.lat, p.lng));
+            $('#coordinates').val(coords);
+            auto_grow();
+
+            drawMarkers.forEach(m => m.setMap(null));
+            if (drawPolyline) drawPolyline.setMap(null);
+            drawMarkers = [];
+            drawPolyline = null;
+            drawPoints = [];
+
+            google.maps.event.addListener(lastpolygon.getPath(), 'set_at', updateCoordsFromPolygon);
+            google.maps.event.addListener(lastpolygon.getPath(), 'insert_at', updateCoordsFromPolygon);
+            google.maps.event.addListener(lastpolygon.getPath(), 'remove_at', updateCoordsFromPolygon);
+        }
+
+        function updateCoordsFromPolygon() {
+            if (lastpolygon) {
+                const path = lastpolygon.getPath();
+                const coords = [];
+                for (let i = 0; i < path.getLength(); i++) {
+                    coords.push(path.getAt(i));
+                }
+                $('#coordinates').val(coords);
+                auto_grow();
+            }
+        }
+
+        function clearDrawing() {
+            isDrawing = false;
+            map.setOptions({ draggableCursor: null });
+            drawMarkers.forEach(m => m.setMap(null));
+            if (drawPolyline) drawPolyline.setMap(null);
+            if (lastpolygon) lastpolygon.setMap(null);
+            drawMarkers = [];
+            drawPolyline = null;
+            drawPoints = [];
+            lastpolygon = null;
+            $('#coordinates').val('');
         }
 
         function initialize() {
@@ -159,7 +261,6 @@
             map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
 
             const polygonCoords = [
-
                     @foreach($area['coordinates'] as $coords)
                 {
                     lat: {{$coords[1]}}, lng: {{$coords[0]}}
@@ -185,85 +286,70 @@
                 });
             });
 
+            const drawDiv = document.createElement("div");
+            createDrawButton(drawDiv, map);
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(drawDiv);
 
-            drawingManager = new google.maps.drawing.DrawingManager({
-                drawingMode: google.maps.drawing.OverlayType.POLYGON,
-                drawingControl: true,
-                drawingControlOptions: {
-                    position: google.maps.ControlPosition.TOP_CENTER,
-                    drawingModes: [google.maps.drawing.OverlayType.POLYGON]
-                },
-                polygonOptions: {
-                    editable: true
-                }
-            });
-            drawingManager.setMap(map);
-
-            google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
-                let newShape = event.overlay;
-                newShape.type = event.type;
-            });
-
-            google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
-                if (lastpolygon) {
-                    lastpolygon.setMap(null);
-                }
-                $('#coordinates').val(event.overlay.getPath().getArray());
-                lastpolygon = event.overlay;
-                auto_grow();
-            });
             const resetDiv = document.createElement("div");
-            resetMap(resetDiv, lastpolygon);
+            createResetButton(resetDiv);
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(resetDiv);
+
+            map.addListener('click', (e) => {
+                if (!isDrawing) return;
+                drawPoints.push({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+
+                const marker = new google.maps.Marker({
+                    position: e.latLng,
+                    map: map,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 6,
+                        fillColor: '#0c67a3',
+                        fillOpacity: 1,
+                        strokeColor: '#fff',
+                        strokeWeight: 2
+                    }
+                });
+                drawMarkers.push(marker);
+
+                if (drawPolyline) drawPolyline.setMap(null);
+                if (drawPoints.length >= 2) {
+                    drawPolyline = new google.maps.Polyline({
+                        path: drawPoints,
+                        strokeColor: '#0c67a3',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        map: map
+                    });
+                }
+            });
+
+            map.addListener('dblclick', (e) => {
+                if (!isDrawing) return;
+                e.stop();
+                finishDrawing();
+            });
 
             // Create the search box and link it to the UI element.
             const input = document.getElementById("pac-input");
             const searchBox = new google.maps.places.SearchBox(input);
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
-            // Bias the SearchBox results towards current map's viewport.
             map.addListener("bounds_changed", () => {
                 searchBox.setBounds(map.getBounds());
             });
             let markers = [];
-            // Listen for the event fired when the user selects a prediction and retrieve
-            // more details for that place.
             searchBox.addListener("places_changed", () => {
                 const places = searchBox.getPlaces();
-
-                if (places.length == 0) {
-                    return;
-                }
-                // Clear out the old markers.
-                markers.forEach((marker) => {
-                    marker.setMap(null);
-                });
+                if (places.length == 0) return;
+                markers.forEach((marker) => marker.setMap(null));
                 markers = [];
-                // For each place, get the icon, name and location.
                 const bounds = new google.maps.LatLngBounds();
                 places.forEach((place) => {
-                    if (!place.geometry || !place.geometry.location) {
-                        console.log("Returned place contains no geometry");
-                        return;
-                    }
-                    const icon = {
-                        url: place.icon,
-                        size: new google.maps.Size(71, 71),
-                        origin: new google.maps.Point(0, 0),
-                        anchor: new google.maps.Point(17, 34),
-                        scaledSize: new google.maps.Size(25, 25),
-                    };
-                    // Create a marker for each place.
-                    markers.push(
-                        new google.maps.Marker({
-                            map,
-                            icon,
-                            title: place.name,
-                            position: place.geometry.location,
-                        })
-                    );
-
+                    if (!place.geometry || !place.geometry.location) return;
+                    markers.push(new google.maps.Marker({
+                        map, title: place.name, position: place.geometry.location,
+                    }));
                     if (place.geometry.viewport) {
-                        // Only geocodes have viewport.
                         bounds.union(place.geometry.viewport);
                     } else {
                         bounds.extend(place.geometry.location);
@@ -271,6 +357,8 @@
                 });
                 map.fitBounds(bounds);
             });
+
+            set_all_zones();
         }
 
         google.maps.event.addDomListener(window, 'load', initialize);
@@ -291,13 +379,11 @@
                         }));
                         polygons[i].setMap(map);
                     }
-
                 },
             });
         }
 
         $(document).on('ready', function () {
-            set_all_zones();
             $("#zone_form").on('keydown', function (e) {
                 if (e.keyCode === 13) {
                     e.preventDefault();
@@ -307,8 +393,7 @@
 
         $('#reset_btn').click(function () {
             $('#name').val(null);
-            lastpolygon.setMap(null);
-            $('#coordinates').val(null);
+            clearDrawing();
         })
 
     </script>
