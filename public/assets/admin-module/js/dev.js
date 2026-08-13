@@ -59,6 +59,7 @@
     });
 
     function auto_grow() {
+        let element = document.getElementById("coordinates");
         if (element) {
             element.style.height = "5px";
             element.style.height = element.scrollHeight + "px";
