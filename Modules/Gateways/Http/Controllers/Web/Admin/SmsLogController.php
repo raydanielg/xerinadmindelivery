@@ -3,7 +3,11 @@
 namespace Modules\Gateways\Http\Controllers\Web\Admin;
 
 use App\Http\Controllers\BaseController;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\View\View;
 use Modules\Gateways\Entities\SmsLog;
 
 class SmsLogController extends BaseController
