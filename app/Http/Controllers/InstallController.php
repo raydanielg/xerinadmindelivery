@@ -218,71 +218,71 @@ Parcel ID is {ParcelId} You can track this parcel from this link {TrackingLink}"
             $url = preg_replace('/^www\./', '', $url);
             $key = base64_encode(random_bytes(32));
             $output = 'APP_NAME=Xerin Express Delivery' . time() . '
-                    APP_ENV=live
-                    APP_MODE=live
-                    APP_KEY=base64:' . $key . '
-                    APP_DEBUG=false
-                    APP_INSTALL=true
-                    APP_LOG_LEVEL=debug
-                    APP_URL=' . URL::to('/') . '
+APP_ENV=live
+APP_MODE=live
+APP_KEY=base64:' . $key . '
+APP_DEBUG=false
+APP_INSTALL=true
+APP_LOG_LEVEL=debug
+APP_URL=' . URL::to('/') . '
 
-                    DB_CONNECTION=mysql
-                    DB_HOST=' . $request->DB_HOST . '
-                    DB_PORT=3306
-                    DB_DATABASE=' . $request->DB_DATABASE . '
-                    DB_USERNAME=' . $request->DB_USERNAME . '
-                    DB_PASSWORD=' . $request->DB_PASSWORD . '
+DB_CONNECTION=mysql
+DB_HOST=' . $request->DB_HOST . '
+DB_PORT=3306
+DB_DATABASE=' . $request->DB_DATABASE . '
+DB_USERNAME=' . $request->DB_USERNAME . '
+DB_PASSWORD=' . $request->DB_PASSWORD . '
 
-                    BROADCAST_DRIVER=reverb
-                    CACHE_DRIVER=file
-                    SESSION_DRIVER=file
-                    SESSION_LIFETIME=60
-                    QUEUE_DRIVER=sync
+BROADCAST_DRIVER=reverb
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+SESSION_LIFETIME=60
+QUEUE_DRIVER=sync
 
-                    AWS_ENDPOINT=
-                    AWS_ACCESS_KEY_ID=
-                    AWS_SECRET_ACCESS_KEY=
-                    AWS_DEFAULT_REGION=us-east-1
-                    AWS_BUCKET=
+AWS_ENDPOINT=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
 
-                    REDIS_HOST=127.0.0.1
-                    REDIS_PASSWORD=null
-                    REDIS_PORT=6379
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
 
-                    PUSHER_APP_ID=xerin_express_delivery
-                    PUSHER_APP_KEY=xerin_express_delivery
-                    PUSHER_APP_SECRET=xerin_express_delivery
-                    PUSHER_APP_CLUSTER=mt1
-                    PUSHER_HOST=' . $url . '
-                    PUSHER_PORT=6001
-                    PUSHER_SCHEME="http"
-                    MIX_APP_NAME="${APP_NAME}"
-                    MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
-                    MIX_PUSHER_HOST="${PUSHER_HOST}"
-                    MIX_PUSHER_PORT="${PUSHER_PORT}"
-                    MIX_PUSHER_SCHEME="${PUSHER_SCHEME}"
-                    MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+PUSHER_APP_ID=xerin_express_delivery
+PUSHER_APP_KEY=xerin_express_delivery
+PUSHER_APP_SECRET=xerin_express_delivery
+PUSHER_APP_CLUSTER=mt1
+PUSHER_HOST=' . $url . '
+PUSHER_PORT=6001
+PUSHER_SCHEME="http"
+MIX_APP_NAME="${APP_NAME}"
+MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+MIX_PUSHER_HOST="${PUSHER_HOST}"
+MIX_PUSHER_PORT="${PUSHER_PORT}"
+MIX_PUSHER_SCHEME="${PUSHER_SCHEME}"
+MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 
-                    REVERB_APP_ID=10000000
-                    REVERB_APP_KEY=xerin_express_delivery
-                    REVERB_APP_SECRET=xerin_express_delivery
-                    REVERB_HOST=' . $url . '
-                    REVERB_PORT=6001
-                    REVERB_SCHEME="http"
-                    REVERB_SSL_CERT_PATH=""
-                    REVERB_SSL_KEY_PATH=""
+REVERB_APP_ID=10000000
+REVERB_APP_KEY=xerin_express_delivery
+REVERB_APP_SECRET=xerin_express_delivery
+REVERB_HOST=' . $url . '
+REVERB_PORT=6001
+REVERB_SCHEME="http"
+REVERB_SSL_CERT_PATH=""
+REVERB_SSL_KEY_PATH=""
 
-                    MIX_REVERB_APP_KEY="${REVERB_APP_KEY}"
-                    MIX_REVERB_HOST="${REVERB_HOST}"
-                    MIX_REVERB_PORT="${REVERB_PORT}"
-                    MIX_REVERB_SCHEME="${REVERB_SCHEME}"
+MIX_REVERB_APP_KEY="${REVERB_APP_KEY}"
+MIX_REVERB_HOST="${REVERB_HOST}"
+MIX_REVERB_PORT="${REVERB_PORT}"
+MIX_REVERB_SCHEME="${REVERB_SCHEME}"
 
-                    PURCHASE_CODE=N/A
-                    BUYER_USERNAME=N/A
-                    SOFTWARE_ID=MTAwMDAwMDA=
+PURCHASE_CODE=N/A
+BUYER_USERNAME=N/A
+SOFTWARE_ID=MTAwMDAwMDA=
 
-                    SOFTWARE_VERSION=3.2
-                    ';
+SOFTWARE_VERSION=3.2
+';
             $file = fopen(base_path('.env'), 'w');
             fwrite($file, $output);
             fclose($file);
