@@ -7,10 +7,10 @@
     <!-- Progress -->
     <div class="pb-2">
         <div class="progress cursor-pointer" role="progressbar" aria-label="Xerin Express Delivery Software Installation"
-             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip"
-             data-bs-placement="top" data-bs-custom-class="custom-progress-tooltip" data-bs-title="Third Step!"
+             aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip"
+             data-bs-placement="top" data-bs-custom-class="custom-progress-tooltip" data-bs-title="Second Step!"
              data-bs-delay='{"hide":1000}'>
-            <div class="progress-bar w-d" style="--width: 60%"></div>
+            <div class="progress-bar w-d" style="--width: 40%"></div>
         </div>
     </div>
 
@@ -28,7 +28,7 @@
         </div>
         <div class="p-4 mb-md-3 mx-xl-4 px-md-5">
             <div class="d-flex align-items-center column-gap-3 flex-wrap">
-                <h5 class="fw-bold fs text-uppercase">{{translate('Step 3.')}} </h5>
+                <h5 class="fw-bold fs text-uppercase">{{translate('Step 2.')}} </h5>
                 <h5 class="fw-normal">{{translate('Update Database Information')}}</h5>
             </div>
             <p class="mb-4">{{translate('Provide your database information.')}}

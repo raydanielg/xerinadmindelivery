@@ -77,15 +77,6 @@ class InstallController extends Controller
         return redirect()->route('step0');
     }
 
-    public function step2(Request $request): View|Factory|RedirectResponse|Application
-    {
-        if (Hash::check('step_2', $request['token'])) {
-            return view('installation.step2');
-        }
-        session()->flash('error', 'Access denied!');
-        return redirect()->route('step0');
-    }
-
     public function step3(Request $request): View|Factory|RedirectResponse|Application
     {
         if (Hash::check('step_3', $request['token'])) {
@@ -111,29 +102,6 @@ class InstallController extends Controller
         }
         session()->flash('error', 'Access denied!');
         return redirect()->route('step0');
-    }
-
-    public function purchaseCode(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'username' => 'required|regex:/^\S*$/u',
-            'purchase_key' => 'required|regex:/^\S*$/u',
-        ]);
-
-        $this->setEnvironmentValue('SOFTWARE_ID', 'MTAwMDAwMDA=');
-        $this->setEnvironmentValue('BUYER_USERNAME', $request['username']);
-        $this->setEnvironmentValue('PURCHASE_CODE', $request['purchase_key']);
-
-        $post = [
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'username' => str_replace(' ', '_', $request['username']),
-            'purchase_key' => str_replace(' ', '', $request['purchase_key']),
-            'domain' => preg_replace("#^[^:/.]*[:/]+#i", "", url('/')),
-        ];
-        $response = $this->dmvf($post);
-
-        return redirect($response . '?token=' . bcrypt('step_3'));
     }
 
     public function systemSettings(Request $request): View|Factory|RedirectResponse|Application
@@ -309,8 +277,8 @@ Parcel ID is {ParcelId} You can track this parcel from this link {TrackingLink}"
                     MIX_REVERB_PORT="${REVERB_PORT}"
                     MIX_REVERB_SCHEME="${REVERB_SCHEME}"
 
-                    PURCHASE_CODE=' . session('purchase_key') . '
-                    BUYER_USERNAME=' . session('username') . '
+                    PURCHASE_CODE=N/A
+                    BUYER_USERNAME=N/A
                     SOFTWARE_ID=MTAwMDAwMDA=
 
                     SOFTWARE_VERSION=3.2

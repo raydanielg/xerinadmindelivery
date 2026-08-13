@@ -112,7 +112,7 @@
 
                     @if (array_product($permission) && $phpVersionMatched)
                         <div class="d-flex justify-content-center">
-                            <a href="{{ route('step2',['token'=>bcrypt('step_2')]) }}"
+                            <a href="{{ route('step3',['token'=>bcrypt('step_3')]) }}"
                                class="btn btn-dark px-sm-5">{{translate('Proceed to Next')}}</a>
                         </div>
                     @endif
