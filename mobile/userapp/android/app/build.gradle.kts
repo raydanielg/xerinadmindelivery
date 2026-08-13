@@ -5,6 +5,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services")
 }
 
 val keystoreProperties = Properties()
@@ -14,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.sixamtech.hexarideuser"
+    namespace = "zerinexpress.com"
     compileSdk = 36
     ndkVersion = "28.2.13676358"
 
@@ -28,7 +29,7 @@ android {
 
     defaultConfig {
         multiDexEnabled = true
-        applicationId = "com.sixamtech.hexarideuser"
+        applicationId = "zerinexpress.com"
         minSdk = flutter.minSdkVersion
         targetSdk = 36
         versionCode = flutter.versionCode

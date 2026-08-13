@@ -28,14 +28,14 @@
 
    <application
        android:requestLegacyExternalStorage="true"
-       android:label="DriveMond Driver"
+       android:label="Zerin Driver"
        android:name="${applicationName}"
        android:extractNativeLibs="true"
        android:icon="@mipmap/ic_launcher"
        android:allowBackup="false"
        android:usesCleartextTraffic="false"
        android:fullBackupOnly="false">
-       <meta-data android:name="com.google.android.geo.API_KEY" android:value="YOUR_MAP_KEY_HERE" />
+       <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCnTJcgbtoZm_2BkI_2js5bJHBe_wRLYnM" />
        <meta-data android:name="com.google.android.gms.version"
            android:value="@integer/google_play_services_version" />
        <!-- Necessary for apps that target Android 9.0 or higher -->
@@ -65,8 +65,8 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="YOUR_DOMAIN_HERE" android:scheme="http"/>
-                <data android:host="YOUR_DOMAIN_HERE" android:scheme="https"/>
+                <data android:host="zerinexpress.com" android:scheme="http"/>
+                <data android:host="zerinexpress.com" android:scheme="https"/>
                 <data android:pathPrefix="/locate-driver" />
             </intent-filter>
         </activity>

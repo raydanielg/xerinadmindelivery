@@ -3,9 +3,9 @@ import 'package:ride_sharing_user_app/localization/language_model.dart';
 import 'package:ride_sharing_user_app/util/images.dart';
 
 class AppConstants {
-  static const String appName = 'DriveMond Driver';
-  static const String baseUrl = 'YOUR_BASE_URL_HERE';
-  static const String polylineMapKey = 'YOUR_MAP_KEY_HERE';
+  static const String appName = 'Zerin Driver';
+  static const String baseUrl = 'https://zerinexpress.com';
+  static const String polylineMapKey = 'AIzaSyCnTJcgbtoZm_2BkI_2js5bJHBe_wRLYnM';
   static const double appVersion = 3.2;   /// Flutter SDK 3.41.9
   static const String configUri = '/api/driver/configuration';
   static const String registration = '/api/driver/auth/registration';
