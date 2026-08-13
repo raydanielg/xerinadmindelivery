@@ -217,7 +217,7 @@ Parcel ID is {ParcelId} You can track this parcel from this link {TrackingLink}"
             // Remove www.
             $url = preg_replace('/^www\./', '', $url);
             $key = base64_encode(random_bytes(32));
-            $output = 'APP_NAME=Xerin Express Delivery' . time() . '
+            $output = 'APP_NAME="Xerin Express Delivery' . time() . '"
 APP_ENV=live
 APP_MODE=live
 APP_KEY=base64:' . $key . '
