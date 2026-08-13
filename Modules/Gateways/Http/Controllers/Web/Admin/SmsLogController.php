@@ -2,17 +2,13 @@
 
 namespace Modules\Gateways\Http\Controllers\Web\Admin;
 
-use App\Http\Controllers\BaseController;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\View\View;
 use Modules\Gateways\Entities\SmsLog;
 
-class SmsLogController extends BaseController
+class SmsLogController extends Controller
 {
-    public function index(?Request $request, ?string $type = null): View|Collection|LengthAwarePaginator|null|callable|RedirectResponse
+    public function index(Request $request)
     {
         $query = SmsLog::query();
 
