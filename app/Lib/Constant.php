@@ -2734,6 +2734,7 @@ const MODULES = [
 ];
 
 const TELEPHONE_CODES = [
+    ["name" => 'Tanzania (+255)', "code" => '255'],
     ["name" => 'UK (+44)', "code" => '44'],
     ["name" => 'USA (+1)', "code" => '1'],
     ["name" => 'Algeria (+213)', "code" => '213'],
