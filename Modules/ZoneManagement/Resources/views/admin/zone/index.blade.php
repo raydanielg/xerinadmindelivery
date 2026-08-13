@@ -18,34 +18,29 @@
                             <div class="card-body">
                                 <div class="row justify-content-between">
                                     <div class="col-lg-5 col-xl-4 mb-5 mb-lg-0">
-                                        <h5 class="text-primary mb-4">{{ translate('instructions') }}</h5>
-                                        <div class="d-flex flex-column">
-                                            <p>{{ translate('create_zone_by_click_on_map_and_connect_the_dots_together') }}</p>
-
-                                            <div class="media mb-2 gap-3 align-items-center">
-                                                <img
-                                                    src="{{dynamicAsset('public/assets/admin-module/img/svg/map-drag.svg') }}"
-                                                    class="svg"
-                                                    alt="">
-                                                <div class="media-body ">
-                                                    <p>{{ translate('use_this_to_drag_map_to_find_proper_area') }}</p>
+                                        <div class="bg-F6F6F6 rounded p-4 h-100">
+                                            <h5 class="text-primary mb-3 d-flex align-items-center gap-2">
+                                                <i class="bi bi-info-circle-fill"></i>
+                                                {{ translate('instructions') }}
+                                            </h5>
+                                            <div class="d-flex flex-column gap-3">
+                                                <div class="d-flex gap-3 align-items-start">
+                                                    <div class="flex-shrink-0 rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                                                        <img src="{{dynamicAsset('public/assets/admin-module/img/svg/map-drag.svg') }}" class="svg" alt="" style="width: 20px; height: 20px;">
+                                                    </div>
+                                                    <p class="mb-0 fs-14">{{ translate('use_this_to_drag_map_to_find_proper_area') }}</p>
                                                 </div>
-                                            </div>
 
-                                            <div class="media gap-3 align-items-center">
-                                                <img
-                                                    src="{{dynamicAsset('public/assets/admin-module/img/svg/map-draw.svg') }}"
-                                                    class="svg"
-                                                    alt="">
-                                                <div class="media-body ">
-                                                    <p>{{ translate('click_this_icon_to_start_pin_points_in_the_map_and_connect_them_
-                                                        to_draw_a_zone_._Minimum_3_points_required') }}</p>
+                                                <div class="d-flex gap-3 align-items-start">
+                                                    <div class="flex-shrink-0 rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                                                        <img src="{{dynamicAsset('public/assets/admin-module/img/svg/map-draw.svg') }}" class="svg" alt="" style="width: 20px; height: 20px;">
+                                                    </div>
+                                                    <p class="mb-0 fs-14">{{ translate('click_this_icon_to_start_pin_points_in_the_map_and_connect_them_to_draw_a_zone_._Minimum_3_points_required') }}</p>
                                                 </div>
-                                            </div>
-                                            <div class="map-img mt-4">
-                                                <img
-                                                    src="{{ dynamicAsset('public/assets/admin-module/img/instructions.gif') }}"
-                                                    alt="">
+
+                                                <div class="rounded bg-white p-3 text-center">
+                                                    <img src="{{ dynamicAsset('public/assets/admin-module/img/instructions.gif') }}" alt="" class="img-fluid rounded" style="max-width: 100%;">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -573,12 +568,12 @@
 
         function initialize() {
             let myLatLng = {
-                lat: 23.757989,
-                lng: 90.360587
+                lat: -6.8161,
+                lng: 39.2804
             };
 
             let myOptions = {
-                zoom: 10,
+                zoom: 12,
                 center: myLatLng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
             }
