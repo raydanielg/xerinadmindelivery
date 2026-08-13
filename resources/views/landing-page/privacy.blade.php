@@ -1,6 +1,8 @@
+@php($seoTitle = 'Privacy Policy - ' . ($businessName ?? 'Zerin Express'))
+@php($seoDescription = 'Read the Zerin Express privacy policy. Learn how we protect your data and privacy when using our ride sharing and delivery services.')
+@php($seoKeywords = 'privacy policy, data protection, zerin express privacy, user data')
 @extends('landing-page.layouts.master')
 @section('title', 'Privacy Policy')
-
 
 @section('content')
     <div class="container pt-3">

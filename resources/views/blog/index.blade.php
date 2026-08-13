@@ -1,6 +1,20 @@
+@php($seoTitle = 'Blog - ' . ($businessName ?? 'Zerin Express'))
+@php($seoDescription = 'Read the latest blog posts from Zerin Express. Get insights on ride sharing, delivery services, transportation trends, and app updates.')
+@php($seoKeywords = 'zerin express blog, ride sharing blog, delivery service news, transport articles, logistics blog')
 @extends('landing-page.layouts.master')
 @section('title', 'Blog')
 
+@push('seo')
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Zerin Express Blog",
+        "url": "{{ config('app.url', 'https://zerinexpress.com') }}/blog",
+        "description": "{{ $seoDescription }}"
+    }
+    </script>
+@endpush
 
 @section('content')
     <div class="blog-root-container">

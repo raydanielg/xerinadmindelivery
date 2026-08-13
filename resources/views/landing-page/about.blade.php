@@ -1,6 +1,8 @@
+@php($seoTitle = 'About Us - ' . ($businessName ?? 'Zerin Express'))
+@php($seoDescription = 'Learn about Zerin Express - the smart ride sharing and delivery platform connecting riders, drivers, and businesses across Tanzania.')
+@php($seoKeywords = 'about zerin express, ride sharing company, delivery service tanzania, transport platform')
 @extends('landing-page.layouts.master')
 @section('title', 'About Us')
-
 
 @section('content')
     <div class="container pt-3">

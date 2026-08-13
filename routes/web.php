@@ -6,6 +6,7 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ParcelTrackingController;
 use App\Http\Controllers\PaymentRecordController;
 use App\Http\Controllers\RealTimeLocationSharingController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use Modules\TripManagement\Entities\TripRequest;
@@ -89,3 +90,5 @@ Route::get('test', function () {
 
 Route::get('locate-user/{userId}/{token}', [RealTimeLocationSharingController::class, 'index'])->name('locate-user');
 Route::get('locate-driver/{userId}/{token}', [RealTimeLocationSharingController::class, 'index'])->name('locate-driver');
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');

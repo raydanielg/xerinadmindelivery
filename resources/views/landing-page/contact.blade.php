@@ -1,6 +1,19 @@
+@php($seoTitle = 'Contact Us - ' . ($businessName ?? 'Zerin Express'))
+@php($seoDescription = 'Get in touch with Zerin Express for ride sharing and delivery services. Contact our support team for assistance.')
+@php($seoKeywords = 'contact zerin express, ride sharing support, delivery service contact, customer service')
 @extends('landing-page.layouts.master')
 @section('title', 'Contact Us')
 
+@push('seo')
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        "name": "Contact Us",
+        "url": "{{ config('app.url', 'https://zerinexpress.com') }}/contact-us"
+    }
+    </script>
+@endpush
 
 @section('content')
     @php($email = getSession('business_contact_email'))

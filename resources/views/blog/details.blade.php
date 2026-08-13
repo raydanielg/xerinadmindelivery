@@ -3,27 +3,39 @@
 @php
     $metaTitle = $blog->meta_title ?? $blog->title;
     $metaDescription = $blog->meta_description ?? Str::limit(strip_tags($blog->description), 160);
-    $metaImage = $blog->meta_image ? dynamicStorage('storage/app/public/blog/meta-image/' . $blog->meta_image) : dynamicStorage('storage/app/public/blog/' . $blog->thumbnail)
+    $metaImage = $blog->meta_image ? dynamicStorage('storage/app/public/blog/meta-image/' . $blog->meta_image) : dynamicStorage('storage/app/public/blog/' . $blog->thumbnail);
+    $seoTitle = $metaTitle;
+    $seoDescription = $metaDescription;
+    $seoImage = $metaImage;
+    $seoKeywords = $blog->tags ?? 'blog, zerin express, ride sharing, delivery';
 @endphp
 @if(request()->filled('preview'))
     @section('title', $metaTitle)
 @else
     @section('title', $metaTitle)
     @push('seo')
-        <meta name="description" content="{{ $metaDescription }}">
         <meta property="og:type" content="article">
-        <meta property="og:title" content="{{ $metaTitle }}">
-        <meta property="og:description" content="{{ $metaDescription }}">
-        <meta property="og:image" content="{{ $metaImage }}">
-        <meta property="og:url" content="{{ url()->current() }}">
-
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="{{ $metaTitle }}">
-        <meta name="twitter:description" content="{{ $metaDescription }}">
-        <meta name="twitter:image" content="{{ $metaImage }}">
-
-        <link rel="canonical" href="{{ url()->current() }}">
-
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": "{{ $metaTitle }}",
+            "description": "{{ $metaDescription }}",
+            "image": "{{ $metaImage }}",
+            "url": "{{ url()->current() }}",
+            "datePublished": "{{ $blog->created_at?->toDateString() }}",
+            "dateModified": "{{ $blog->updated_at?->toDateString() }}",
+            "author": {
+                "@type": "Person",
+                "name": "{{ $blog->author?->name ?? 'Zerin Express' }}"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "{{ $businessName ?? 'Zerin Express' }}",
+                "url": "{{ config('app.url', 'https://zerinexpress.com') }}"
+            }
+        }
+        </script>
     @endpush
 @endif
 

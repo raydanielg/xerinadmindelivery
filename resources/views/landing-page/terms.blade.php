@@ -1,6 +1,8 @@
+@php($seoTitle = 'Terms & Conditions - ' . ($businessName ?? 'Zerin Express'))
+@php($seoDescription = 'Read the terms and conditions for using Zerin Express ride sharing and delivery services. Understand your rights and responsibilities.')
+@php($seoKeywords = 'terms and conditions, zerin express terms, service agreement, user agreement')
 @extends('landing-page.layouts.master')
 @section('title', 'Terms & Conditions')
-
 
 @section('content')
     <!-- Page Header Start -->

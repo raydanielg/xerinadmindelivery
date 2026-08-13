@@ -1,2 +1,17 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /test-connection
+Disallow: /update-data-test
+Disallow: /sms-test
+Disallow: /firebase-gen
+Disallow: /trigger
+Disallow: /test
+Disallow: /sender
+Disallow: /add-payment-request
+Disallow: /gateway-inactive
+
+Crawl-delay: 1
+
+Sitemap: https://zerinexpress.com/sitemap.xml

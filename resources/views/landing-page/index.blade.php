@@ -2,9 +2,47 @@
     use Jenssegers\Agent\Agent;
      $userAgent = new Agent();
      $solutionCount = $activeOurSolutions->count() ?? 0;
+    $seoTitle = ($businessName ?? 'Zerin Express') . ' - Ride Sharing & Delivery Solution';
+    $seoDescription = 'Zerin Express offers smart ride sharing and parcel delivery services. Book rides, track deliveries in real-time, and enjoy seamless transport solutions.';
+    $seoKeywords = 'ride sharing, delivery service, parcel delivery, taxi service, ride hailing, express delivery, transport app, Zerin Express, logistics, Dar es Salaam';
 @endphp
 @extends('landing-page.layouts.master')
 @section('title', 'Home')
+
+@push('seo')
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "Ride Sharing & Delivery Service",
+        "serviceType": "Transportation and Delivery",
+        "provider": {
+            "@type": "Organization",
+            "name": "{{ $businessName ?? 'Zerin Express' }}",
+            "url": "{{ config('app.url', 'https://zerinexpress.com') }}"
+        },
+        "areaServed": {
+            "@type": "Country",
+            "name": "Tanzania"
+        },
+        "description": "{{ $seoDescription }}"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "MobileApplication",
+        "name": "{{ $businessName ?? 'Zerin Express' }} User App",
+        "operatingSystem": "ANDROID, iOS",
+        "applicationCategory": "TransportationApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+@endpush
 
 @section('content')
     <!-- Intro Section Start -->
