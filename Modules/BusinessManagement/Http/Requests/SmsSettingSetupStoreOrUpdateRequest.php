@@ -16,30 +16,11 @@ class SmsSettingSetupStoreOrUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'gateway' => 'required|in:releans,twilio,nexmo,2factor,msg91,hubtel,paradox,signal_wire,019_sms,viatech,global_sms,akandit_sms,sms_to,alphanet_sms',
+            'gateway' => 'required|in:twilio,mshastra_sms',
             'mode' => 'required|in:live,test',
             'status' => [
-                'required_if:gateway,releans,twilio,nexmo,2factor,msg91,hubtel,paradox,signal_wire,019_sms,viatech,global_sms,akandit_sms,sms_to,alphanet_sms',
+                'required_if:gateway,twilio,mshastra_sms',
                 Rule::in([1, 0])
-            ],
-            #releans
-            'api_key' => [
-                Rule::requiredIf(function () {
-                    return ($this->input('status') == 1 &&
-                        ($this->input('gateway') == 'releans' || $this->input('gateway') == '2factor' || $this->input('gateway') == 'nexmo'));
-                })
-            ],
-            'from' => [
-                Rule::requiredIf(function () {
-                    return ($this->input('status') == 1 &&
-                        ($this->input('gateway') == 'releans' || $this->input('gateway') == 'twilio' || $this->input('gateway') == 'nexmo'));
-                })
-            ],
-            'otp_template' => [
-                Rule::requiredIf(function () {
-                    return ($this->input('status') == 1 &&
-                        ($this->input('gateway') == 'releans' || $this->input('gateway') == 'twilio' || $this->input('gateway') == 'nexmo'));
-                })
             ],
             #twilio
             'sid' => [
@@ -54,27 +35,19 @@ class SmsSettingSetupStoreOrUpdateRequest extends FormRequest
             ],
             'token' => [
                 Rule::requiredIf(function () {
-                    return ($this->input('status') == 1 &&
-                        ($this->input('gateway') == 'twilio' || $this->input('gateway') == 'nexmo'));
+                    return ($this->input('status') == 1 && $this->input('gateway') == 'twilio');
                 })
             ],
-            #nexmo
-            'api_secret' => [
+            'from' => [
                 Rule::requiredIf(function () {
-                    return ($this->input('status') == 1 && $this->input('gateway') == 'nexmo');
+                    return ($this->input('status') == 1 && $this->input('gateway') == 'twilio');
                 })
             ],
-            #msg91
-            'template_id' => [
+            'otp_template' => [
                 Rule::requiredIf(function () {
-                    return ($this->input('status') == 1 && $this->input('gateway') == 'msg91');
+                    return ($this->input('status') == 1 && $this->input('gateway') == 'twilio');
                 })
             ],
-            'auth_key' => [
-                Rule::requiredIf(function () {
-                    return ($this->input('status') == 1 && $this->input('gateway') == 'msg91');
-                })
-            ]
         ];
     }
 

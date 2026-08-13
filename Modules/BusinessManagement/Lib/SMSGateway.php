@@ -14,26 +14,6 @@ class SMSGateway
             return self::twilio($receiver, $otp);
         }
 
-        $config = self::getSettings('nexmo');
-        if (isset($config) && $config['status'] == 1) {
-            return self::nexmo($receiver, $otp);
-        }
-
-        $config = self::getSettings('2factor');
-        if (isset($config) && $config['status'] == 1) {
-            return self::twoFactor($receiver, $otp);
-        }
-
-        $config = self::getSettings('msg91');
-        if (isset($config) && $config['status'] == 1) {
-            return self::msg91($receiver, $otp);
-        }
-
-        $config = self::getSettings('releans');
-        if (isset($config) && $config['status'] == 1) {
-            return self::releans($receiver, $otp);
-        }
-
         return 'not_found';
     }
 
