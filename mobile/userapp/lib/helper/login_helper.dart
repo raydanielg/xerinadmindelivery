@@ -29,26 +29,32 @@ import 'package:ride_sharing_user_app/util/app_constants.dart';
 class LoginHelper{
 
   void handleIncomingLinks(Map<String,dynamic>? notificationData) async{
-    Get.find<TripController>().getRideCancellationReasonList();
-    Get.find<TripController>().getParcelCancellationReasonList();
-    Get.find<RefundRequestController>().getParcelRefundReasonList();
-    Get.find<PaymentController>().getPaymentGetWayList();
-    FirebaseHelper().subscribeFirebaseTopic();
-    String? path = await initDynamicLinks();
+    try {
+      Get.find<TripController>().getRideCancellationReasonList();
+      Get.find<TripController>().getParcelCancellationReasonList();
+      Get.find<RefundRequestController>().getParcelRefundReasonList();
+      Get.find<PaymentController>().getPaymentGetWayList();
+      FirebaseHelper().subscribeFirebaseTopic();
+      String? path = await initDynamicLinks();
 
-    Get.find<ConfigController>().getConfigData().then((value){
-      if(_isForceUpdate(Get.find<ConfigController>().config)) {
-        Get.offAll(()=> const AppVersionWarningScreen());
-      }else{
-       if(path != null){
-         Get.offAll(()=> LiveLocationScreen(trackingUrl: path));
-       }else{
-         route(notificationData);
-       }
+      Get.find<ConfigController>().getConfigData().then((value){
+        if(_isForceUpdate(Get.find<ConfigController>().config)) {
+          Get.offAll(()=> const AppVersionWarningScreen());
+        }else{
+         if(path != null){
+           Get.offAll(()=> LiveLocationScreen(trackingUrl: path));
+         }else{
+           route(notificationData);
+         }
 
-      }
+        }
 
-    });
+      }).catchError((error) {
+        route(notificationData);
+      });
+    } catch(e) {
+      route(notificationData);
+    }
 
   }
 

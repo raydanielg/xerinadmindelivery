@@ -4,7 +4,7 @@ import 'package:ride_sharing_user_app/util/images.dart';
 
 class AppConstants {
   static const String appName = 'Zerin Driver';
-  static const String baseUrl = 'https://zerinexpress.com';
+  static const String baseUrl = 'https://xerinexpress.com';
   static const String polylineMapKey = 'AIzaSyCnTJcgbtoZm_2BkI_2js5bJHBe_wRLYnM';
   static const double appVersion = 3.2;   /// Flutter SDK 3.41.9
   static const String configUri = '/api/driver/configuration';

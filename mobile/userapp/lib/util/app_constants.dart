@@ -5,7 +5,7 @@ import 'package:ride_sharing_user_app/util/images.dart';
 
 class AppConstants {
   static const String appName = 'Zerin Express';
-  static const String baseUrl = 'https://zerinexpress.com';
+  static const String baseUrl = 'https://xerinexpress.com';
   static const double appVersion = 3.2; /// Flutter SDK 3.41.9
   static const String fontFamily = 'SFProText';
   static const double coverageRadiusInMeter = 50;

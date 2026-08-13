@@ -11,27 +11,35 @@ class ApiChecker {
       LoginHelper.checkLoginMedium();
 
     }else if(response.statusCode == 403) {
-      ErrorResponse errorResponse;
-      errorResponse = ErrorResponse.fromJson(response.body);
-      if(errorResponse.errors != null && errorResponse.errors!.isNotEmpty){
-        showCustomSnackBar(errorResponse.errors![0].message!);
-      }else{
-        showCustomSnackBar(response.body['message']);
+      try {
+        ErrorResponse errorResponse;
+        errorResponse = ErrorResponse.fromJson(response.body);
+        if(errorResponse.errors != null && errorResponse.errors!.isNotEmpty){
+          showCustomSnackBar(errorResponse.errors![0].message!);
+        }else{
+          showCustomSnackBar(response.body['message']);
+        }
+      } catch(_) {
+        showCustomSnackBar('Server error. Please try again later.');
       }
 
     }else if(response.statusCode == 422) {
-      ErrorResponse errorResponse;
-      errorResponse = ErrorResponse.fromJson(response.body);
-      if(errorResponse.errors != null && errorResponse.errors!.isNotEmpty){
-        showCustomSnackBar(errorResponse.errors![0].message!);
-      }else{
-        showCustomSnackBar(response.body['message']);
+      try {
+        ErrorResponse errorResponse;
+        errorResponse = ErrorResponse.fromJson(response.body);
+        if(errorResponse.errors != null && errorResponse.errors!.isNotEmpty){
+          showCustomSnackBar(errorResponse.errors![0].message!);
+        }else{
+          showCustomSnackBar(response.body['message']);
+        }
+      } catch(_) {
+        showCustomSnackBar('Validation error. Please check your input.');
       }
 
     }else if(response.statusCode == 500){
-      showCustomSnackBar(response.statusText!);
+      showCustomSnackBar(response.statusText ?? 'Server error');
     }else {
-      showCustomSnackBar(response.statusText!);
+      showCustomSnackBar(response.statusText ?? 'Something went wrong');
     }
   }
 }
