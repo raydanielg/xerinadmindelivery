@@ -17,23 +17,23 @@ class SmsLogController extends BaseController
         parent::__construct();
     }
 
-    public function index(?Request $request, ?string $type = null)
+    public function index(?Request $request, ?string $type = null): View|Collection|LengthAwarePaginator|null|callable|RedirectResponse
     {
         $query = SmsLog::query();
 
-        if ($request->filled('status')) {
+        if ($request?->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        if ($request->filled('gateway')) {
+        if ($request?->filled('gateway')) {
             $query->where('gateway', $request->gateway);
         }
 
-        if ($request->filled('type')) {
+        if ($request?->filled('type')) {
             $query->where('type', $request->type);
         }
 
-        if ($request->filled('search')) {
+        if ($request?->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('receiver', 'like', "%{$search}%")
