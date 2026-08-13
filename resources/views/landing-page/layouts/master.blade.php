@@ -2,7 +2,7 @@
 <html lang="en">
 @php($preloader = getSession('preloader'))
 @php($favicon = getSession('favicon'))
-@php($seoTitle = $seoTitle ?? (@yield('title') . ' - ' . ($businessName ?? 'Zerin Express')))
+@php($seoTitle = $seoTitle ?? ($__env->yieldContent('title') . ' - ' . ($businessName ?? 'Zerin Express')))
 @php($seoDescription = $seoDescription ?? 'Zerin Express - Smart ride sharing and delivery solution. Book rides, send parcels, and track deliveries in real-time.')
 @php($seoKeywords = $seoKeywords ?? 'ride sharing, delivery, parcel delivery, taxi, transport, ride hailing, express delivery, Zerin Express, logistics')
 @php($seoImage = $seoImage ?? asset('public/landing-page/assets/img/og-image.jpg'))
