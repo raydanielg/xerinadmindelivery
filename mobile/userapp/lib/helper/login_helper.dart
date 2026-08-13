@@ -98,7 +98,8 @@ class LoginHelper{
   }
 
   void forNotLoginUserRoute(Map<String,dynamic>? notificationData){
-    if(Get.find<ConfigController>().config!.maintenanceMode != null &&
+    if(Get.find<ConfigController>().config != null &&
+        Get.find<ConfigController>().config!.maintenanceMode != null &&
         Get.find<ConfigController>().config!.maintenanceMode!.maintenanceStatus == 1 &&
         Get.find<ConfigController>().config!.maintenanceMode!.selectedMaintenanceSystem!.userApp == 1
     ){
