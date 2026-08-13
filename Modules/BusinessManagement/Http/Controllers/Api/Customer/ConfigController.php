@@ -69,8 +69,8 @@ class ConfigController extends Controller
                 $response = Http::get($martBaseUrl . '/api/v1/configurations/get-external',
                     [
                         'mart_token' => $martToken,
-                        'drivemond_base_url' => url('/'),
-                        'drivemond_token' => $systemSelfToken,
+                        'Xerin Express Delivery_base_url' => url('/'),
+                        'Xerin Express Delivery_token' => $systemSelfToken,
                     ]);
                 if ($response->successful()) {
                     $martResponse = $response->json();
