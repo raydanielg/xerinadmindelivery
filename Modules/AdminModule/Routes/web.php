@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PartnerController;
 use Modules\AdminModule\Http\Controllers\Web\Admin\ActivityLogController;
 use Modules\AdminModule\Http\Controllers\Web\Admin\DashboardController;
 use Modules\AdminModule\Http\Controllers\Web\Admin\FirebaseSubscribeController;
@@ -67,6 +68,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], f
     });
 
     Route::view('design', 'adminmodule::design.admin');
+
+    Route::prefix('partnership')->name('partnership.')->group(function () {
+        Route::get('/', [PartnerController::class, 'index'])->name('index');
+        Route::get('create', [PartnerController::class, 'create'])->name('create');
+        Route::post('store', [PartnerController::class, 'store'])->name('store');
+        Route::get('show/{partner}', [PartnerController::class, 'show'])->name('show');
+        Route::get('edit/{partner}', [PartnerController::class, 'edit'])->name('edit');
+        Route::put('update/{partner}', [PartnerController::class, 'update'])->name('update');
+        Route::delete('destroy/{partner}', [PartnerController::class, 'destroy'])->name('destroy');
+        Route::post('regenerate-keys/{partner}', [PartnerController::class, 'regenerateKeys'])->name('regenerate-keys');
+        Route::get('documentation', [PartnerController::class, 'documentation'])->name('documentation');
+    });
 });
 Route::controller(SharedController::class)->group(function () {
     Route::get('lang/{locale}', 'lang')->name('lang');

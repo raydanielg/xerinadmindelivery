@@ -760,6 +760,36 @@
                     </li>
                     <!---------- End Business Management --------------->
                 @endif
+
+                <!---------- Start Partnership --------------->
+                <li class="nav-category" title="{{ translate('Partnership') }}">{{ translate('Partnership') }}</li>
+                <li class="has-sub-item {{Request::is('admin/partnership*') ? 'active sub-menu-opened' : ''}}">
+                    <a href="#">
+                        <i class="bi bi-diagram-3-fill"></i>
+                        <span class="link-title text-capitalize">{{ translate('Partnership') }}</span>
+                    </a>
+                    <ul class="nav sub-menu">
+                        <li class="{{Request::is('admin/partnership') || Request::is('admin/partnership/create') || Request::is('admin/partnership/edit/*') || Request::is('admin/partnership/show/*') ? 'active open' : ''}}">
+                            <a href="{{ route('admin.partnership.index') }}" class="text-capitalize">
+                                <i class="bi bi-dash-lg"></i>
+                                {{ translate('Partners') }}
+                            </a>
+                        </li>
+                        <li class="{{Request::is('admin/partnership/create') ? 'active open' : ''}}">
+                            <a href="{{ route('admin.partnership.create') }}" class="text-capitalize">
+                                <i class="bi bi-dash-lg"></i>
+                                {{ translate('Add Partner') }}
+                            </a>
+                        </li>
+                        <li class="{{Request::is('admin/partnership/documentation') ? 'active open' : ''}}">
+                            <a href="{{ route('admin.partnership.documentation') }}" class="text-capitalize">
+                                <i class="bi bi-dash-lg"></i>
+                                {{ translate('API Documentation') }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!---------- End Partnership --------------->
             </ul>
             <!-- End Nav -->
         </div>
