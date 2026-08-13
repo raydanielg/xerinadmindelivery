@@ -29,7 +29,7 @@ class FirebaseSubscribeController extends Controller
                 $this->messaging->subscribeToTopic($topic, $token);
                 return response()->json(['message' => 'Successfully subscribed to topic'], 200);
             }
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Firebase Service Account not configured. Please set it in Business Settings > Configuration > Firebase.'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

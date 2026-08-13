@@ -75,7 +75,7 @@
                 });
             }
         }).catch(error => {
-            console.error('Subscription error:', error);
+            console.warn('FCM subscription:', error.message);
         });
     }
 

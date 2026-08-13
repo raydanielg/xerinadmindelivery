@@ -135,7 +135,8 @@
       data-on-ajax-form-submit-successful="{{ translate('') }}"
 ></span>
 
-<script src="{{ dynamicAsset('public/assets/admin-module/js/firebase.min.js') }}"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging-compat.js"></script>
 @include('adminmodule::partials._firebase-script')
 <!-- ======= BEGIN GLOBAL MANDATORY SCRIPTS ======= -->
 <script src="{{ dynamicAsset('public/assets/admin-module/js/jquery-3.6.0.min.js') }}"></script>
