@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{dynamicAsset('public/assets/admin-module/plugins/swiper@11/swiper-bundle.min.css')}}"/>
     {{-- callback=initLazyLoadedMaps --}}
     @php($map_key = businessConfig(GOOGLE_MAP_API)?->value['map_api_key'] ?? null)
-    <script src="https://maps.googleapis.com/maps/api/js?key={{$map_key}}&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{$map_key}}&libraries=places&v=weekly&loading=async"></script>
     <script src="{{dynamicAsset('public/assets/admin-module/js/maps/markerclusterer.js')}}"></script>
 @endpush
 
