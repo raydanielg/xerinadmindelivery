@@ -53,8 +53,8 @@ Route::group(['prefix' => 'customer'], function () {
 
         Route::group(['prefix' => 'wallet'], function () {
             Route::controller(WalletTransferController::class)->group(function () {
-                Route::post('transfer-Xerin Express Delivery-to-mart', 'transferXerin Express DeliveryToMartWallet');
-                Route::post('transfer-Xerin Express Delivery-from-mart', 'transferXerin Express DeliveryFromMartWallet')->withoutMiddleware('auth:api');
+                Route::post('transfer-xerin-to-mart', 'transferXerinToMartWallet');
+                Route::post('transfer-xerin-from-mart', 'transferXerinFromMartWallet')->withoutMiddleware('auth:api');
             });
             Route::controller(WalletController::class)->group(function () {
                 Route::get('bonus-list', 'bonusList');

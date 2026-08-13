@@ -80,15 +80,7 @@ class UpdateController extends Controller
         $data = $this->actch();
         try {
             if (!$data->getData()->active) {
-                $remove = array("http://", "https://", "www.");
-                $url = str_replace($remove, "", url('/'));
-
-                $activation_url = base64_decode('aHR0cHM6Ly9hY3RpdmF0aW9uLmRyaXZlbW9uZC5hcHAv');
-                $activation_url .= '?username=' . $request['username'];
-                $activation_url .= '&purchase_code=' . $request['purchase_key'];
-                $activation_url .= '&domain=' . $url . '&';
-
-                return redirect($activation_url);
+                return back();
             }
         } catch (Exception $exception) {
             Toastr::error('verification failed! try again');

@@ -337,21 +337,13 @@ if (!function_exists('externalConfig')) {
 if (!function_exists('checkExternalConfiguration')) {
     function checkExternalConfiguration(string $externalBaseUrl, int|string $externalToken, int|string $xerinToken): bool
     {
-        $activationMode = externalConfig('activation_mode')?->value;
-        $martBaseUrl = externalConfig('mart_base_url')?->value;
-        $martToken = externalConfig('mart_token')?->value;
-        $systemSelfToken = externalConfig('system_self_token')?->value;
-        return $activationMode == 1 && $martBaseUrl == $externalBaseUrl && $martToken == $externalToken && $systemSelfToken == $xerinToken;
+        return false;
     }
 }
 if (!function_exists('checkSelfExternalConfiguration')) {
     function checkSelfExternalConfiguration(): bool
     {
-        $activationMode = externalConfig('activation_mode')?->value;
-        $martBaseUrl = externalConfig('mart_base_url')?->value;
-        $martToken = externalConfig('mart_token')?->value;
-        $systemSelfToken = externalConfig('system_self_token')?->value;
-        return $activationMode == 1 && $martBaseUrl != null && $martToken != null && $systemSelfToken != null;
+        return false;
     }
 }
 if (!function_exists('generateReferralCode')) {

@@ -21,7 +21,7 @@ class WalletTransferController extends Controller
         $this->customerAccountService = $customerAccountService;
     }
 
-    public function transferXerin Express DeliveryToMartWallet(Request $request)
+    public function transferXerinToMartWallet(Request $request)
     {
         return response()->json(responseFormatter([
             'response_code' => 'feature_disabled_403',
@@ -29,7 +29,7 @@ class WalletTransferController extends Controller
         ]), 403);
     }
 
-    public function transferXerin Express DeliveryFromMartWallet(Request $request)
+    public function transferXerinFromMartWallet(Request $request)
     {
         return response()->json([
             'status' => false,
