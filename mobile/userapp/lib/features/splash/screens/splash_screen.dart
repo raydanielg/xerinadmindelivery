@@ -21,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   StreamSubscription<List<ConnectivityResult>>? _onConnectivityChanged;
   late AnimationController _controller;
   late Animation _animation;
+  bool _navigated = false;
 
 
   @override
@@ -40,6 +41,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     Get.find<ConfigController>().initSharedData();
 
     _checkConnectivity();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted && !_navigated) {
+        _navigated = true;
+        LoginHelper().handleIncomingLinks(widget.notificationData);
+      }
+    });
   }
 
   void _checkConnectivity(){
@@ -57,14 +65,18 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             textAlign: TextAlign.center,
           ),
         ));
-        if(isConnected) {
+        if(isConnected && !_navigated) {
+          _navigated = true;
           LoginHelper().handleIncomingLinks(widget.notificationData);
 
         }
       }else{
         ScaffoldMessenger.of(Get.context!).removeCurrentSnackBar();
         ScaffoldMessenger.of(Get.context!).hideCurrentSnackBar();
-        LoginHelper().handleIncomingLinks(widget.notificationData);
+        if (!_navigated) {
+          _navigated = true;
+          LoginHelper().handleIncomingLinks(widget.notificationData);
+        }
       }
       isFirst = false;
     });

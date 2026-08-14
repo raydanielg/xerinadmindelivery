@@ -129,10 +129,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           color: Get.isDarkMode ? Colors.white.withValues(alpha:0.8) : Colors.white,
           onPressed: () => onBackPressed != null ? onBackPressed!() : Navigator.canPop(context) ? Get.back() : Get.offAll(()=> const DashboardScreen()),
         ) :
-        Padding(
-          padding: const EdgeInsets.all(Dimensions.paddingSize),
-          child: Image.asset(Images.icon,height: Get.height*0.01,width: Get.width*0.01),
-        ),
+        const SizedBox.shrink(),
 
         actions: [
           if(!showTripHistoryFilter && !showBonusHint  && !showDiscountHint)

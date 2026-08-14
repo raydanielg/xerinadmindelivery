@@ -22,16 +22,20 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if(GetPlatform.isAndroid) {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: "AIzaSyCFGqSEiWMItei_AFIUgdM53PWrvyGmjFY",
-        appId: "1:76471554747:android:9fb5d198e81cd2b26d0f9e",
-        messagingSenderId: "76471554747",
-        projectId: "drivevalley-fdb7f",
-      ),
-    );
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: "AIzaSyAg0pkKGzrJcSRv-uWI82JrzSJvyz1h_bY",
+          appId: "1:56442076502:android:4e9ab51b5949b147b96af7",
+          messagingSenderId: "56442076502",
+          projectId: "zerinexpress-1401c",
+        ),
+      );
+    }
   } else {
-  await Firebase.initializeApp();
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
   }
 
   Map<String, Map<String, String>> languages = await di.init();

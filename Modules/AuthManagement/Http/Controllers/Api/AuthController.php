@@ -205,6 +205,19 @@ class AuthController extends Controller
             $this->authService->sendOtpToClient($user);
         }
 
+        if ($route && $request->fcm_token) {
+            $push = getNotification('welcome_customer');
+            sendDeviceNotification(fcm_token: $request->fcm_token,
+                title: translate(key: $push['title'], locale: $user?->current_language_key),
+                description: textVariableDataFormat(value: $push['description'], businessName: getBusinessSettings('business_name')?->value ?? 'Xerin Delivery', locale: $user?->current_language_key),
+                status: $push['status'],
+                ride_request_id: $user?->id,
+                notification_type: 'welcome',
+                action: $push['action'],
+                user_id: $user?->id
+            );
+        }
+
         return response()->json(responseFormatter(REGISTRATION_200));
     }
     public function registrationFromOtp(RegistrationFromOtpStoreRequest $request): JsonResponse

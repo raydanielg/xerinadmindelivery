@@ -4,9 +4,9 @@ import 'package:ride_sharing_user_app/localization/language_model.dart';
 import 'package:ride_sharing_user_app/util/images.dart';
 
 class AppConstants {
-  static const String appName = 'Zerin Express';
+  static const String appName = 'Xerin Delivery';
   static const String baseUrl = 'https://xerinexpress.com';
-  static const double appVersion = 3.2; /// Flutter SDK 3.41.9
+  static const double appVersion = 3.3; /// Flutter SDK 3.41.9
   static const String fontFamily = 'SFProText';
   static const double coverageRadiusInMeter = 50;
   static const String configUri = '/api/customer/configuration';

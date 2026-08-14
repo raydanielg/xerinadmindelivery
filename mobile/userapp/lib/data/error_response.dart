@@ -42,7 +42,7 @@ class Errors {
   }
 
   Errors.fromJson(dynamic json) {
-    _code = json["code"];
+    _code = json["code"] ?? json["error_code"];
     _message = json["message"];
   }
 

@@ -111,18 +111,12 @@ class LoginHelper{
     ){
       Get.offAll(() => const MaintenanceScreen());
     }else{
-      if (Get.find<ConfigController>().showIntro()) {
-        Get.offAll(() => OnBoardingScreen(notificationData: notificationData));
-
-      }else {
-        if(Get.find<LocalizationController>().haveLocalLanguageCode()){
+      if(Get.find<LocalizationController>().haveLocalLanguageCode()){
           checkLoginMedium();
 
         }else{
           Get.offAll(()=> LanguageSelectionScreen(notificationData: notificationData));
         }
-
-      }
     }
   }
 
