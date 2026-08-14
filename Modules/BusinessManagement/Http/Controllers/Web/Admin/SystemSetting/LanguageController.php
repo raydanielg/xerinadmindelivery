@@ -42,6 +42,7 @@ class LanguageController extends BaseController
                 ]],
                 'settings_type' => LANGUAGE_SETTINGS
             ]);
+            $language = $this->languageSettingService->findOneBy(criteria: ['key_name' => SYSTEM_LANGUAGE, 'settings_type' => LANGUAGE_SETTINGS]);
         }
         $allLanguages = collect(LANGUAGES);
         return view('businessmanagement::admin.system-settings.language.index', compact('language','allLanguages'));
