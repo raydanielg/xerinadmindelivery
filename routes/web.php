@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountDeletionController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\LandingPageController;
@@ -92,3 +93,7 @@ Route::get('locate-user/{userId}/{token}', [RealTimeLocationSharingController::c
 Route::get('locate-driver/{userId}/{token}', [RealTimeLocationSharingController::class, 'index'])->name('locate-driver');
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
+// Account Deletion (Google Play / App Store compliance)
+Route::get('/account-deletion', [AccountDeletionController::class, 'index'])->name('account-deletion');
+Route::post('/account-deletion', [AccountDeletionController::class, 'submit'])->name('account-deletion.submit');

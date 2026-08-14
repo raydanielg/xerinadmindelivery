@@ -314,6 +314,7 @@
                     <li><a href="{{ route('contact-us') }}">{{ translate('Contact Us') }}</a></li>
                     <li><a href="{{ route('privacy') }}">{{ translate('Privacy Policy') }}</a></li>
                     <li><a href="{{ route('terms') }}">{{ translate('Terms & Condition') }}</a></li>
+                    <li><a href="{{ route('account-deletion') }}">{{ translate('Delete Account') }}</a></li>
                 </ul>
             </div>
 

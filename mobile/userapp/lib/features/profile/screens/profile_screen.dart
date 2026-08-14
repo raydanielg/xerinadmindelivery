@@ -25,6 +25,7 @@ import 'package:ride_sharing_user_app/features/wallet/screens/wallet_screen.dart
 import 'package:ride_sharing_user_app/common_widgets/app_bar_widget.dart';
 import 'package:ride_sharing_user_app/common_widgets/body_widget.dart';
 import 'package:ride_sharing_user_app/common_widgets/image_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -221,6 +222,14 @@ class ProfileScreen extends StatelessWidget {
                         );
                       })
                     );
+                  },
+                ),
+
+                ProfileMenuItem(title: 'request_account_deletion_link'.tr,
+                  icon: Images.privacyPolicyIcon,
+                  divider: true,
+                  onTap: () {
+                    launchUrl(Uri.parse('${AppConstants.baseUrl}/account-deletion'), mode: LaunchMode.externalApplication);
                   },
                 ),
 
