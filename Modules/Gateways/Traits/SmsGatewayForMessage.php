@@ -22,6 +22,11 @@ trait  SmsGatewayForMessage
             return self::mshastra_sms(receiver: $receiver, message: $message, config: $config);
         }
 
+        $config = self::get_settings('hesed_sms');
+        if (isset($config) && $config['status'] == 1) {
+            return self::hesed_sms(receiver: $receiver, message: $message, config: $config);
+        }
+
         return 'not_found';
     }
 
@@ -574,6 +579,69 @@ trait  SmsGatewayForMessage
                         $response = 'error';
                         $logData['status'] = 'error';
                         $logData['error_message'] = $result ?: 'Empty response from gateway';
+                    }
+                } else {
+                    $response = 'error';
+                    $logData['status'] = 'error';
+                    $logData['error_message'] = $err ?: "HTTP $httpCode";
+                }
+            } catch (\Exception $exception) {
+                $response = 'error';
+                $logData['status'] = 'error';
+                $logData['error_message'] = $exception->getMessage();
+            }
+            try {
+                \Modules\Gateways\Entities\SmsLog::create($logData);
+            } catch (\Exception $e) {}
+        }
+        return $response;
+    }
+
+    public static function hesed_sms($receiver, $message, $config): string
+    {
+        $response = 'error';
+        if (isset($config) && $config['status'] == 1) {
+            $logData = [
+                'gateway' => 'hesed_sms',
+                'receiver' => $receiver,
+                'message' => $message,
+                'type' => 'message',
+            ];
+            try {
+                $receiver = str_replace("+", "", $receiver);
+                $cleanedPhone = preg_replace('/\D/', '', $receiver);
+                $lastNine = substr($cleanedPhone, -9);
+                $fullPhone = '255' . $lastNine;
+
+                $url = 'https://hesedsms.co.tz/sendurl.aspx?' . http_build_query([
+                    'user' => $config['user'],
+                    'pwd' => $config['pwd'],
+                    'senderid' => $config['sender_id'],
+                    'mobileno' => $fullPhone,
+                    'msgtext' => $message,
+                    'priority' => 'High',
+                    'CountryCode' => 'ALL',
+                ]);
+
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+                $result = curl_exec($ch);
+                $err = curl_error($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+
+                $logData['response'] = $result;
+                if (!$err && $httpCode >= 200 && $httpCode < 300) {
+                    if (stripos($result, 'Send Successful') !== false || stripos($result, 'success') !== false) {
+                        $response = 'success';
+                        $logData['status'] = 'success';
+                    } else {
+                        $response = 'error';
+                        $logData['status'] = 'error';
+                        $logData['error_message'] = $result ?: 'Unknown response from gateway';
                     }
                 } else {
                     $response = 'error';
