@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -27,6 +28,7 @@ return new class extends Migration
 
         if (!$mshastra) {
             DB::table('settings')->insert([
+                'id' => Str::uuid(),
                 'key_name' => 'mshastra_sms',
                 'live_values' => json_encode([
                     'status' => 0,
@@ -58,6 +60,7 @@ return new class extends Migration
 
         if (!$hesed) {
             DB::table('settings')->insert([
+                'id' => Str::uuid(),
                 'key_name' => 'hesed_sms',
                 'live_values' => json_encode([
                     'status' => 0,
