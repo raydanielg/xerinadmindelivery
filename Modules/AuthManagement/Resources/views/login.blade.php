@@ -92,7 +92,8 @@
                                         dynamicStorage('storage/app/public/business') . '/' . $logo,
                                         dynamicAsset('public/assets/admin-module/img/logo.png'),
                                         'business/',
-                                    ) }}" alt="Logo" style="max-height: 80px;">
+                                    ) }}" alt="Logo"
+                                 onerror="this.onerror=null;this.src='{{ dynamicAsset('public/assets/admin-module/img/logo.png') }}';">
                             <h2 class="text-uppercase mb-3">{{ businessConfig('business_name')->value ?? null }}</h2>
                             <h3 class="mb-2">{{ translate('Sign_In') }}</h3>
                             <p class="opacity-75">{{ translate('sign_in_to_stay_connected') }}

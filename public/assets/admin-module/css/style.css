@@ -3533,13 +3533,19 @@ body.aside-folded[theme="dark"] .aside-body .nav ul.sub-menu {
 }
 
 .login-logo {
-    width: 60%;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    object-fit: contain;
 }
 
 @media only screen and (max-width: 575px) {
     .register-left,
     .login-left {
         display: none;
+    }
+    .login-logo {
+        max-width: 220px;
     }
 }
 
@@ -4040,10 +4046,6 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .bg-center {
     background-position: center;
-}
-
-.login-logo {
-    max-width: 225px;
 }
 
 .login-right {
