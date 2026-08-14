@@ -12,13 +12,6 @@ return new class extends Migration
             return;
         }
 
-        $allowedGateways = ['twilio', 'mshastra_sms', 'hesed_sms'];
-
-        DB::table('settings')
-            ->where('settings_type', 'sms_config')
-            ->whereNotIn('key_name', $allowedGateways)
-            ->delete();
-
         // Ensure mshastra_sms exists
         $mshastra = DB::table('settings')
             ->where('key_name', 'mshastra_sms')
@@ -80,6 +73,13 @@ return new class extends Migration
                 'updated_at' => now(),
             ]);
         }
+
+        // Remove any SMS gateways that are not in the allowed list
+        $allowedGateways = ['twilio', 'mshastra_sms', 'hesed_sms'];
+        DB::table('settings')
+            ->where('settings_type', 'sms_config')
+            ->whereNotIn('key_name', $allowedGateways)
+            ->delete();
     }
 
     public function down(): void
