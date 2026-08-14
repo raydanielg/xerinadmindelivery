@@ -7,6 +7,28 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:56442076502:android:2a31d6faaf73e07bb96af7",
+        "android_client_info": {
+          "package_name": "com.zerin.driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF3Wvxm2qL7ywYY8UPxdur5yZkMi5r6lo"
+        },
+        {
+          "current_key": "AIzaSyAg0pkKGzrJcSRv-uWI82JrzSJvyz1h_bY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:56442076502:android:4e9ab51b5949b147b96af7",
         "android_client_info": {
           "package_name": "zerinexpress.com"
@@ -14,6 +36,9 @@
       },
       "oauth_client": [],
       "api_key": [
+        {
+          "current_key": "AIzaSyAF3Wvxm2qL7ywYY8UPxdur5yZkMi5r6lo"
+        },
         {
           "current_key": "AIzaSyAg0pkKGzrJcSRv-uWI82JrzSJvyz1h_bY"
         }
