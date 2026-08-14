@@ -11,6 +11,7 @@ import 'package:ride_sharing_user_app/helper/svg_image_helper.dart';
 import 'package:ride_sharing_user_app/util/dimensions.dart';
 import 'package:ride_sharing_user_app/util/images.dart';
 import 'package:ride_sharing_user_app/util/styles.dart';
+import 'package:ride_sharing_user_app/theme/theme_controller.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -43,8 +44,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
               Expanded(
                 child: SingleChildScrollView(child: Column(children: [
-                  SvgPicture.asset(Images.logoWithNameSvg, height: 40),
-                  const SizedBox(height: Dimensions.paddingSizeSignUp),
+                  const SizedBox(height: Dimensions.paddingSizeLarge),
+                  Center(child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, height: 80)),
+                  const SizedBox(height: Dimensions.paddingSizeLarge),
 
                   FutureBuilder<String>(
                       future: loadSvgAndChangeColors(Images.signUpScreenLogoSvg, Theme.of(context).primaryColor),
@@ -59,13 +61,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: Dimensions.paddingSizeSignUp),
 
-                  Text('choose_service'.tr,style: textBold.copyWith(fontSize: 22)),
+                  Text('create_account'.tr,style: textBold.copyWith(fontSize: 22)),
                   const SizedBox(height: Dimensions.paddingSizeSmall),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 50),
-                    child: Text('select_your_preferable_service'.tr,
-                      style: textRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
+                    child: Text('sign_up_message'.tr,
+                      style: textRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7)),
                       textAlign: TextAlign.center,
                     ),
                   ),

@@ -21,11 +21,16 @@ class PusherHelper{
   static PusherChannelsClient?  pusherClient;
 
   static void initializePusher() async{
+    int port = 6001;
+    try {
+      port = int.parse(Get.find<SplashController>().config?.webSocketPort ?? '6001');
+    } catch(_) {}
+
     PusherChannelsOptions testOptions = PusherChannelsOptions.fromHost(
       host: Get.find<SplashController>().config!.webSocketUrl ?? '',
       scheme: Get.find<SplashController>().config!.websocketScheme == 'https' ? 'wss' : 'ws',
       key: Get.find<SplashController>().config!.webSocketKey ?? '',
-      port: int.parse(Get.find<SplashController>().config?.webSocketPort ?? '6001'),
+      port: port,
     );
     pusherClient = PusherChannelsClient.websocket(
       options: testOptions,

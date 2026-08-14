@@ -485,20 +485,26 @@ class ProfileController extends GetxController implements GetxService{
   void _checkPermission(Function callback) async {
     LocationPermission permission = await Geolocator.requestPermission();
     permission = await Geolocator.checkPermission();
-    if(permission == LocationPermission.denied
+    if(permission == LocationPermission.denied) {
+      Get.dialog(ConfirmationDialogWidget(
+        description: 'you_denied'.tr,
+        fromOpenLocation: true,
+        onYesPressed: () async {
+          Get.back();
+          await Geolocator.requestPermission();
+          _checkPermission(callback);
+        }, icon: Images.logo,), barrierDismissible: false);
+    } else if(permission == LocationPermission.deniedForever
         || (GetPlatform.isIOS ? false : permission == LocationPermission.whileInUse)) {
-      Get.dialog(ConfirmationDialogWidget(description: 'you_denied'.tr, onYesPressed: () async {
-        Get.back();
-        await Geolocator.requestPermission();
-        _checkPermission(callback);
-      }, icon: Images.logo,), barrierDismissible: false);
-    }else if(permission == LocationPermission.deniedForever) {
-      Get.dialog(ConfirmationDialogWidget(description: 'you_denied_forever'.tr, onYesPressed: () async {
-        Get.back();
-        await Geolocator.openAppSettings();
-        _checkPermission(callback);
-      }, icon: Images.logo,), barrierDismissible: false);
-    }else {
+      Get.dialog(ConfirmationDialogWidget(
+        description: 'you_denied_forever'.tr,
+        fromOpenLocation: true,
+        onYesPressed: () async {
+          Get.back();
+          await Geolocator.openAppSettings();
+          _checkPermission(callback);
+        }, icon: Images.logo,), barrierDismissible: false);
+    } else {
       callback();
     }
     await Permission.notification.isDenied.then((value) {

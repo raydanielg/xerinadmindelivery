@@ -75,11 +75,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: [
                         const SizedBox(height: Dimensions.paddingSizeSignUp),
 
-                        Center(child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, height: 60)),
-                        const SizedBox(height: Dimensions.paddingSizeSignUp),
+                        Center(child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, height: 80)),
+                        const SizedBox(height: Dimensions.paddingSizeLarge),
 
                         Text(
-                          'login'.tr,
+                          'welcome_back'.tr,
                           style: textBold.copyWith(fontSize: Dimensions.fontSizeTwenty),
                         ),
                         const SizedBox(height: Dimensions.paddingSizeExtraSmall),
@@ -87,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         Text(
                           'log_in_message'.tr,
                           style: textMedium.copyWith(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),fontSize: Dimensions.fontSizeSmall),
-                          maxLines: 2,
+                          maxLines: 3,
                         ),
                         const SizedBox(height: Dimensions.paddingSizeSignUp),
 

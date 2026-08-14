@@ -141,15 +141,62 @@ class LocationController extends GetxController implements GetxService {
 
 
   Future<bool> checkPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    if(GetPlatform.isIOS) {
-     await Geolocator.requestPermission();
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if(!serviceEnabled) {
+      Get.dialog(
+        ConfirmationDialogWidget(
+          description: 'location_service_disabled'.tr,
+          fromOpenLocation: true,
+          onYesPressed: () async {
+            await Geolocator.openLocationSettings();
+            Get.back();
+          }, icon: Images.logo,
+        ),
+        barrierDismissible: false,
+      );
+      return false;
     }
 
-    if(permission == LocationPermission.always){
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if(permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if(permission == LocationPermission.deniedForever) {
+      Get.dialog(
+        ConfirmationDialogWidget(
+          description: 'you_have_to_allow'.tr,
+          fromOpenLocation: true,
+          onYesPressed: () async {
+            await Geolocator.openAppSettings();
+            Get.back();
+          }, icon: Images.logo,
+        ),
+        barrierDismissible: false,
+      );
+      return false;
+    }
+
+    if(permission == LocationPermission.always) {
       return true;
-    }else{
+    } else if(permission == LocationPermission.whileInUse) {
+      if(GetPlatform.isAndroid) {
+        Get.dialog(
+          ConfirmationDialogWidget(
+            description: 'you_have_to_allow'.tr,
+            fromOpenLocation: true,
+            onYesPressed: () async {
+              await Geolocator.openAppSettings();
+              Get.back();
+            }, icon: Images.logo,
+          ),
+          barrierDismissible: false,
+        );
+        return false;
+      }
+      return true;
+    } else {
       Get.dialog(
         ConfirmationDialogWidget(
           description: 'you_have_to_allow'.tr,

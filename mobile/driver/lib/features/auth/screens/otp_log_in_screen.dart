@@ -54,8 +54,8 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, height: 75, width: 200)),
-                    const SizedBox(height: Dimensions.paddingSizeExtraLarge),
+                    Center(child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, height: 80)),
+                    const SizedBox(height: Dimensions.paddingSizeLarge),
 
                     FutureBuilder<String>(
                         future: loadSvgAndChangeColors(Images.otpLoginGraphics, Theme.of(context).primaryColor),

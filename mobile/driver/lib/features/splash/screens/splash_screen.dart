@@ -7,9 +7,6 @@ import 'package:ride_sharing_user_app/features/wallet/controllers/wallet_control
 import 'package:ride_sharing_user_app/helper/login_helper.dart';
 import 'package:ride_sharing_user_app/util/images.dart';
 import 'package:ride_sharing_user_app/features/auth/controllers/auth_controller.dart';
-import 'package:ride_sharing_user_app/features/location/controllers/location_controller.dart';
-import 'package:ride_sharing_user_app/features/profile/controllers/profile_controller.dart';
-import 'package:ride_sharing_user_app/features/ride/controllers/ride_controller.dart';
 import 'package:ride_sharing_user_app/features/splash/controllers/splash_controller.dart';
 import 'package:ride_sharing_user_app/theme/theme_controller.dart';
 
@@ -24,7 +21,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   StreamSubscription<List<ConnectivityResult>>? _onConnectivityChanged;
   late AnimationController _controller;
-  late Animation _animation;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -90,55 +87,19 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GetBuilder<RideController>(builder: (rideController) {
-        return GetBuilder<ProfileController>(builder: (profileController) {
-          return GetBuilder<LocationController>(builder: (locationController) {
-            return Stack(children: [
-              Container(
-                decoration: BoxDecoration(color: Theme.of(context).primaryColorDark),
-                alignment: Alignment.bottomCenter,
-                child: Column(mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end, children: [
-                      Stack(alignment: AlignmentDirectional.bottomCenter, children: [
-                        Container(transform: Matrix4.translationValues(
-                            0, 320 - (320 * double.tryParse(_animation.value.toString())!),
-                            0),
-                          child: Column(children: [
-                            Opacity(opacity: _animation.value,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: 120 - ((120 * double.tryParse(_animation.value.toString())!)),
-                                ),
-                                child: Image.asset(Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode, width: 160),
-                              ),
-                            ),
-                            const SizedBox(height: 50),
-
-                            Image.asset(
-                              Images.splashBackgroundOne, width: Get.width,
-                              height: Get.height / 2,
-                              fit: BoxFit.cover,
-                            ),
-                          ]),
-                        ),
-
-                        Container(
-                          transform: Matrix4.translationValues(0, 20, 0),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: (70 * double.tryParse(_animation.value.toString())!),
-                            ),
-                            child: Image.asset(Images.splashBackgroundTwo, width: Get.size.width),
-                          ),
-                        )
-                      ]),
-                    ]),
-              ),
-
-            ]);
-          });
-        });
-      }),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Center(
+        child: Opacity(
+          opacity: _animation.value,
+          child: ScaleTransition(
+            scale: _animation,
+            child: Image.asset(
+              Get.find<ThemeController>().darkTheme ? Images.logoDarkMode : Images.logoLightMode,
+              width: 220,
+            ),
+          ),
+        ),
+      ),
     );
   }
 

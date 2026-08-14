@@ -34,28 +34,46 @@ Future<void> main() async {
   );
 
   WidgetsFlutterBinding.ensureInitialized();
-  if(GetPlatform.isAndroid) {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: "AIzaSyCFGqSEiWMItei_AFIUgdM53PWrvyGmjFY",
-        appId: "1:76471554747:android:28346318a6d400326d0f9e",
-        messagingSenderId: "76471554747",
-        projectId: "drivevalley-fdb7f",
-      ),
-    );
-  } else {
-    await Firebase.initializeApp();
+  try {
+    if(GetPlatform.isAndroid) {
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: "AIzaSyAF3Wvxm2qL7ywYY8UPxdur5yZkMi5r6lo",
+          appId: "1:56442076502:android:2a31d6faaf73e07bb96af7",
+          messagingSenderId: "56442076502",
+          projectId: "zerinexpress-1401c",
+        ),
+      );
+    } else {
+      await Firebase.initializeApp();
+    }
+  } catch (e) {
+    debugPrint('Firebase initialization error: $e');
   }
 
-  cameras = await availableCameras();
+  try {
+    cameras = await availableCameras();
+  } catch (e) {
+    debugPrint('Camera initialization error: $e');
+    cameras = [];
+  }
 
   Map<String, Map<String, String>> languages = await di.init();
 
-  final RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
+  RemoteMessage? remoteMessage;
+  try {
+    remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
+  } catch (e) {
+    debugPrint('FirebaseMessaging error: $e');
+  }
 
   await NotificationHelper.initialize(flutterLocalNotificationsPlugin);
 
-  FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+  try {
+    FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+  } catch (e) {
+    debugPrint('FirebaseMessaging background handler error: $e');
+  }
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
@@ -73,7 +91,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Get.isDarkMode? const Color(0xFF053B35) : const Color(0xFF00A08D),
+        statusBarColor: Get.isDarkMode? const Color(0xFFCC5500) : const Color(0xFFFF6B00),
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.dark)
     );

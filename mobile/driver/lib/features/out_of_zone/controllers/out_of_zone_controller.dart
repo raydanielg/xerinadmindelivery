@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:ride_sharing_user_app/data/api_checker.dart';
@@ -39,24 +40,47 @@ class OutOfZoneController extends GetxController implements GetxService {
   }
 
   Future getDriverCurrentPosition() async{
-    location = await Geolocator.getCurrentPosition(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.high)
-    );
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if(!serviceEnabled) { return; }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if(permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if(permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+        return;
+      }
+
+      location = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high)
+      );
+    } catch(e) {
+      if (kDebugMode) {
+        print('getDriverCurrentPosition error: $e');
+      }
+    }
   }
 
   Future<void> findDriverCurrentZone() async {
     await getDriverCurrentPosition();
-    for(int i=0 ; i<polygones.length ; i++){
-      if(MapHelper.isPointInPolygon(LatLngPoint(location.latitude, location.longitude), polygones[i])){
-        currentZone = polygones[i];
-        isDriverOutOfZone = false;
-        break;
-      }else{
-        isDriverOutOfZone = true;
+    try {
+      for(int i=0 ; i<polygones.length ; i++){
+        if(MapHelper.isPointInPolygon(LatLngPoint(location.latitude, location.longitude), polygones[i])){
+          currentZone = polygones[i];
+          isDriverOutOfZone = false;
+          break;
+        }else{
+          isDriverOutOfZone = true;
+        }
       }
-    }
-    if(polygones.isNotEmpty){
-      outOfZoneOnListener();
+      if(polygones.isNotEmpty){
+        outOfZoneOnListener();
+      }
+    } catch(e) {
+      if (kDebugMode) {
+        print('findDriverCurrentZone error: $e');
+      }
     }
   }
 

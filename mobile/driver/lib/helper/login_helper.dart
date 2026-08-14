@@ -83,7 +83,13 @@ class LoginHelper{
         ){
           Get.offAll(() => const MaintenanceScreen());
         }else{
-          checkLoginMedium();
+          Get.find<LocationController>().checkPermission().then((granted) {
+            if(granted) {
+              checkLoginMedium();
+            } else {
+              Get.offAll(()=> const AccessLocationScreen());
+            }
+          });
         }
       }
     });

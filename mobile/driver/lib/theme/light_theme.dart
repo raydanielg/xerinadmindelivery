@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ride_sharing_user_app/theme/custom_theme_colors.dart';
 ThemeData lightTheme = ThemeData(
     fontFamily: 'SFProText',
-    primaryColor: const Color(0xFF00A08D),
+    primaryColor: const Color(0xFFFF6B00),
     disabledColor: const Color(0xFFBABFC4),
-    primaryColorDark: const Color(0xff007B6C),
+    primaryColorDark: const Color(0xffE55A00),
     brightness: Brightness.light,
     hintColor: const Color(0xFF9F9F9F),
     cardColor: Colors.white,
@@ -15,31 +15,31 @@ ThemeData lightTheme = ThemeData(
 
 
   colorScheme: const ColorScheme.light(
-      primary: Color(0xFFBBF9F1),
+      primary: Color(0xFFFFE0CC),
       surface: Color(0xFFF3F3F3),
       error: Color(0xFFFF6767),
-      secondary: Color(0xFF008C7B),
+      secondary: Color(0xFFE55A00),
       tertiary: Color(0xFF7CCD8B),
       tertiaryContainer: Color(0xFFC98B3E),
       secondaryContainer: Color(0xFFEE6464),
       onTertiary: Color(0xFFD9D9D9),
-      onSecondary: Color(0xFF00FEE1),
+      onSecondary: Color(0xFFFF6B00),
       onSecondaryContainer: Color(0xFFA8C5C1),
       onTertiaryContainer: Color(0xFF425956),
-      outline: Color(0xFF8CFFF1),
-      onPrimaryContainer: Color(0xFFDEFFFB),
-      primaryContainer: Color(0xFFFFA800),
+      outline: Color(0xFFFFCC99),
+      onPrimaryContainer: Color(0xFFFFF0E6),
+      primaryContainer: Color(0xFFFF6B00),
       onErrorContainer: Color(0xFFFFE6AD),
-      onPrimary: Color(0xFF14B19E),
+      onPrimary: Color(0xFFFF6B00),
       surfaceTint: Color(0xFF0B9722),
       errorContainer: Color(0xFFF6F6F6),
-      shadow: Color(0xFFCEFCF7),
+      shadow: Color(0xFFFFE0CC),
       surfaceContainer: Color(0xFF016ACD),
       secondaryFixedDim: Color(0xFF808080)
 
 
   ),
-  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: const Color(0xFF00A08D))),
+  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: const Color(0xFFFF6B00))),
 
   textTheme: const TextTheme(
    displayLarge: TextStyle(fontWeight: FontWeight.w300, color: Color(0xFF202020)),

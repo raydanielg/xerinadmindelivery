@@ -21,21 +21,23 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterL
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if(GetPlatform.isAndroid) {
+  try {
     if (Firebase.apps.isEmpty) {
-      await Firebase.initializeApp(
-        options: const FirebaseOptions(
-          apiKey: "AIzaSyAg0pkKGzrJcSRv-uWI82JrzSJvyz1h_bY",
-          appId: "1:56442076502:android:4e9ab51b5949b147b96af7",
-          messagingSenderId: "56442076502",
-          projectId: "zerinexpress-1401c",
-        ),
-      );
+      if (GetPlatform.isAndroid) {
+        await Firebase.initializeApp(
+          options: const FirebaseOptions(
+            apiKey: "AIzaSyAg0pkKGzrJcSRv-uWI82JrzSJvyz1h_bY",
+            appId: "1:56442076502:android:4e9ab51b5949b147b96af7",
+            messagingSenderId: "56442076502",
+            projectId: "zerinexpress-1401c",
+          ),
+        );
+      } else {
+        await Firebase.initializeApp();
+      }
     }
-  } else {
-    if (Firebase.apps.isEmpty) {
-      await Firebase.initializeApp();
-    }
+  } catch (e) {
+    print('Firebase initialization error: $e');
   }
 
   Map<String, Map<String, String>> languages = await di.init();

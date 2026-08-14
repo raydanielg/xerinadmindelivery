@@ -5,6 +5,7 @@ use Modules\TripManagement\Http\Controllers\Api\Customer\ParcelRefundController;
 use Modules\TripManagement\Http\Controllers\Api\Customer\SafetyAlertController;
 use Modules\TripManagement\Http\Controllers\Api\Customer\TripRequestController as NewCustomerTripController;
 use Modules\TripManagement\Http\Controllers\Api\Driver\TripRequestController as NewDriverTripController;
+use Modules\TripManagement\Http\Controllers\Api\ExternalDeliveryController;
 use Modules\TripManagement\Http\Controllers\Api\PaymentController;
 
 /**
@@ -106,3 +107,15 @@ Route::group(['prefix' => 'driver', 'middleware' => ['auth:api', 'maintenance_mo
 });
 
 Route::post('ride/store-screenshot', [NewDriverTripController::class, 'storeScreenshot'])->middleware('auth:api');
+
+/**
+ * EXTERNAL DELIVERY INTEGRATION (Xerin Marketplace)
+ */
+Route::group(['prefix' => 'external-delivery', 'middleware' => ['auth:api']], function () {
+    Route::post('quote', [ExternalDeliveryController::class, 'quote']);
+    Route::get('seller-orders/{seller_order_id}', [ExternalDeliveryController::class, 'getDelivery']);
+    Route::post('seller-orders/{seller_order_id}/request', [ExternalDeliveryController::class, 'requestDelivery']);
+});
+
+// Webhook route - no auth middleware, uses signature verification
+Route::post('external-delivery/webhooks/{provider}', [ExternalDeliveryController::class, 'webhook']);

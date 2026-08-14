@@ -31,7 +31,15 @@ class ConfirmationDialogWidget extends StatelessWidget {
             Positioned(top: -70,left: 0,right: 0,
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Container(width: 100,height: 100,
-                    decoration: BoxDecoration(color: Theme.of(context).canvasColor, borderRadius: BorderRadius.circular(100)),
+                    decoration: BoxDecoration(
+                      color: fromOpenLocation
+                          ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                          : Theme.of(context).canvasColor,
+                      borderRadius: BorderRadius.circular(100),
+                      border: fromOpenLocation
+                          ? Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.3), width: 2)
+                          : null,
+                    ),
                     child: Padding(padding: const EdgeInsets.all(Dimensions.paddingSizeOverLarge),
                       child: Image.asset(icon, width: 40, height: 40, color: iconColor)))])),
 
@@ -46,9 +54,22 @@ class ConfirmationDialogWidget extends StatelessWidget {
                   child: Text(description, style: textMedium.copyWith(fontSize: Dimensions.fontSizeLarge), textAlign: TextAlign.center)),
                 const SizedBox(height: Dimensions.paddingSizeLarge),
 
-                fromOpenLocation? ButtonWidget(buttonText: 'open_setting'.tr,
-                  onPressed: () =>  onYesPressed(),
-                  radius: Dimensions.radiusSmall, height: 40):
+                fromOpenLocation? Column(children: [
+                  ButtonWidget(buttonText: 'open_setting'.tr,
+                    onPressed: () =>  onYesPressed(),
+                    radius: Dimensions.radiusSmall, height: 45,
+                    icon: Icons.settings),
+                  const SizedBox(height: Dimensions.paddingSizeSmall),
+                  TextButton(
+                    onPressed: () => Get.back(),
+                    child: Text('maybe_later'.tr,
+                      style: textRegular.copyWith(
+                        fontSize: Dimensions.fontSizeSmall,
+                        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ),
+                ]):
 
                 loading? SpinKitCircle(color: Theme.of(context).primaryColor, size: 40.0):
                 Row(children: [Expanded(child: TextButton(

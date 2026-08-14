@@ -835,6 +835,7 @@
   "delete_address": "حذف العنوان",
   "wallet_bonus": "مكافأة المحفظة",
   "ready_to_ride": "هل أنت مستعد للركوب؟",
+  "ready_to_send": "هل أنت مستعد للإرسال؟",
   "remember_me": "تذكرنى",
   "login_with_otp": "تسجيل الدخول باستخدام OTP",
   "get_otp": "احصل على كلمة مرور لمرة واحدة",

@@ -75,7 +75,7 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 
               Text(
-                'ready_to_ride'.tr,
+                'ready_to_send'.tr,
                 style: textBold.copyWith(fontSize: Dimensions.fontSizeTwenty),
               ),
               const SizedBox(height: Dimensions.paddingSizeExtraSmall),

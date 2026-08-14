@@ -1,4 +1,4 @@
-package com.sixamtech.hexariderider
+package com.zerin.driver
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 
