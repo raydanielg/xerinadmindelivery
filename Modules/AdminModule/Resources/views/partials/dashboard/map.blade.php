@@ -41,6 +41,10 @@
 
 
         function initialize() {
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined' || typeof google.maps.Map !== 'function') {
+                setTimeout(initialize, 100);
+                return;
+            }
             let myLatlng = {
                 lat: 23.757989,
                 lng: 90.360587

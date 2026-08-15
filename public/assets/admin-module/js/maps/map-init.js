@@ -1,5 +1,11 @@
 "use strict";
 
+function initMapApp() {
+    if (typeof google === 'undefined' || typeof google.maps === 'undefined' || typeof google.maps.LatLngBounds !== 'function') {
+        setTimeout(initMapApp, 100);
+        return;
+    }
+
 $(document).ready(function () {
     let bounds = new google.maps.LatLngBounds();
 
@@ -125,3 +131,6 @@ $(document).ready(function () {
         initMap(map.attr("id"), lat, lng, title, markers, input, polygonData);
     });
 });
+}
+
+initMapApp();

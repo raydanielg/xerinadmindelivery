@@ -1,5 +1,11 @@
 "use strict";
 
+function initMapBindApp() {
+    if (typeof google === 'undefined' || typeof google.maps === 'undefined' || typeof google.maps.Geocoder !== 'function') {
+        setTimeout(initMapBindApp, 100);
+        return;
+    }
+
 $(document).ready(function () {
     const DEFAULT_LOCATION = { lat: 23.8103, lng: 90.4125 };
     const DEFAULT_ZOOM = 13;
@@ -160,3 +166,6 @@ $(document).ready(function () {
         initMap(map.attr("id"), input, title);
     });
 });
+}
+
+initMapBindApp();

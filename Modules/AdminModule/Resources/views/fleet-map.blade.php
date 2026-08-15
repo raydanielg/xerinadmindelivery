@@ -228,6 +228,11 @@
                 sessionStorage.setItem('showZoneMessage', 'false');
             });
         });
+        function initFleetMap() {
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined' || typeof google.maps.LatLngBounds !== 'function') {
+                setTimeout(initFleetMap, 100);
+                return;
+            }
         $(document).ready(function () {
             let bounds = new google.maps.LatLngBounds();
             let map = "";
@@ -683,5 +688,7 @@
                 $(this).hide()
             })
         });
+        }
+        initFleetMap();
     </script>
 @endpush

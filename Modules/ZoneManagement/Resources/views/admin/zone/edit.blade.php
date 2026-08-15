@@ -114,7 +114,7 @@
         let map;
         let lat_longs = new Array();
         let lastpolygon = null;
-        let bounds = new google.maps.LatLngBounds();
+        let bounds = null;
         let polygons = [];
         let isDrawing = false;
         let drawPoints = [];
@@ -252,6 +252,11 @@
         }
 
         function initialize() {
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined' || typeof google.maps.Map !== 'function') {
+                setTimeout(initialize, 100);
+                return;
+            }
+            bounds = new google.maps.LatLngBounds();
             let myLatlng = new google.maps.LatLng({{trim(explode(' ',$zone->center)[1], 'POINT()') }}, {{trim(explode(' ',$zone->center)[0], 'POINT()') }});
             let myOptions = {
                 zoom: 13,

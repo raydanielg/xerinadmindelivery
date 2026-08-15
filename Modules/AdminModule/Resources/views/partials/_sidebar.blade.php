@@ -5,7 +5,7 @@
         <a href="{{route('admin.dashboard')}}" class="logo d-flex gap-2 align-items-center">
             <img src="{{$logo ? dynamicStorage("storage/app/public/business/".$logo) : dynamicAsset('public/assets/admin-module/img/logo.png')}}"
                  alt="" class="main-logo"
-                 style="max-width: 130px; max-height: 40px; width: auto; height: auto; object-fit: contain;">
+                 style="max-width: 180px; max-height: 55px; width: auto; height: auto; object-fit: contain;">
         </a>
         <!-- End Logo -->
 
@@ -32,8 +32,8 @@
                     ) }}" alt="">
                 </div>
                 <div class="media-body ">
-                    <div class="card-title word-break fw-bold">{{auth()->user()?->email}}</div>
-                    <span class="card-text">{{auth()->user()?->user_type}}</span>
+                    <div class="card-title word-break fw-semibold" style="font-size: 11px; line-height: 1.3;">{{auth()->user()?->email}}</div>
+                    <span class="card-text" style="font-size: 10px;">{{auth()->user()?->user_type}}</span>
                 </div>
             </div>
             <!-- End User Profile -->

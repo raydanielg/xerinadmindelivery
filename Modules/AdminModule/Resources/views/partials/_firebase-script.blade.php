@@ -49,8 +49,7 @@
     const vapidKey = 'BBX5c0PNU_MXfLTJkv2n1RixXnsCchlmw3nDCUxvKH3lrxoSMJXJOZcMIa_oZIQljGUfAO9g4nbfvlXVvrEOIAM';
 
     function startFCM() {
-        messaging
-            .requestPermission()
+        Notification.requestPermission()
             .then(function () {
                 return messaging.getToken({ vapidKey: vapidKey });
             })
