@@ -73,20 +73,20 @@
 
             // Create the search box and link it to the UI element.
             const input = document.getElementById("pac-input");
-            const searchBox = new google.maps.places.SearchBox(input);
+            const autocomplete = new google.maps.places.Autocomplete(input);
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
-            // Bias the SearchBox results towards current map's viewport.
+            // Bias the Autocomplete results towards current map's viewport.
             map.addListener("bounds_changed", () => {
-                searchBox.setBounds(map.getBounds());
+                autocomplete.setBounds(map.getBounds());
             });
             let markers = [];
 
             // Listen for the event fired when the user selects a prediction and retrieve
             // more details for that place.
-            searchBox.addListener("places_changed", () => {
-                const places = searchBox.getPlaces();
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
 
-                if (places.length === 0) {
+                if (!place || !place.geometry || !place.geometry.location) {
                     return;
                 }
                 // Clear out the old markers.
@@ -96,10 +96,6 @@
                 markers = [];
                 // For each place, get the icon, name and location.
                 const bounds = new google.maps.LatLngBounds();
-                places.forEach((place) => {
-                    if (!place.geometry || !place.geometry.location) {
-                        return;
-                    }
                     const icon = {
                         url: place.icon,
                         size: new google.maps.Size(71, 71),
@@ -123,7 +119,6 @@
                     } else {
                         bounds.extend(place.geometry.location);
                     }
-                });
                 map.fitBounds(bounds);
             });
         }

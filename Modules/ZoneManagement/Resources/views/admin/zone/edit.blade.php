@@ -330,20 +330,18 @@
 
             // Create the search box and link it to the UI element.
             const input = document.getElementById("pac-input");
-            const searchBox = new google.maps.places.SearchBox(input);
+            const autocomplete = new google.maps.places.Autocomplete(input);
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
             map.addListener("bounds_changed", () => {
-                searchBox.setBounds(map.getBounds());
+                autocomplete.setBounds(map.getBounds());
             });
             let markers = [];
-            searchBox.addListener("places_changed", () => {
-                const places = searchBox.getPlaces();
-                if (places.length == 0) return;
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+                if (!place || !place.geometry || !place.geometry.location) return;
                 markers.forEach((marker) => marker.setMap(null));
                 markers = [];
                 const bounds = new google.maps.LatLngBounds();
-                places.forEach((place) => {
-                    if (!place.geometry || !place.geometry.location) return;
                     markers.push(new google.maps.Marker({
                         map, title: place.name, position: place.geometry.location,
                     }));
@@ -352,7 +350,6 @@
                     } else {
                         bounds.extend(place.geometry.location);
                     }
-                });
                 map.fitBounds(bounds);
             });
 

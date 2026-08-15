@@ -90,13 +90,11 @@ $(document).ready(function () {
                 });
             });
 
-            const searchBox = new google.maps.places.SearchBox(searchInput);
-            map.addListener("bounds_changed", () => searchBox.setBounds(map.getBounds()));
-            searchBox.addListener("places_changed", () => {
-                const places = searchBox.getPlaces();
-                if (!places.length) return;
-                const place = places[0];
-                if (!place.geometry || !place.geometry.location) return;
+            const autocomplete = new google.maps.places.Autocomplete(searchInput);
+            map.addListener("bounds_changed", () => autocomplete.setBounds(map.getBounds()));
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+                if (!place || !place.geometry || !place.geometry.location) return;
 
                 const addr = place.formatted_address || place.name;
                 const pos = place.geometry.location;
