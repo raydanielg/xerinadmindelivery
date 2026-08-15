@@ -110,8 +110,8 @@
         }
 
         .table-striped tbody tr:nth-of-type(odd) td {
-            /* background: #e0fffb;
-            background-color: #e0fffb; */
+            /* background: #fff4ed;
+            background-color: #fff4ed; */
             color: #293231;
         }
 
@@ -189,7 +189,7 @@
         /*    border: 1px solid #ebebeb !important;*/
         /*}*/
         .border-primary {
-            border-color: #14b19e !important;
+            border-color: #f97316 !important;
         }
 
         .border-bottom {
@@ -214,7 +214,7 @@
 
         a,
         .text-primary {
-            color: #14b19e !important;
+            color: #f97316 !important;
         }
 
         a {
@@ -322,7 +322,7 @@
         }
 
         .bg-primary {
-            background: #14b19e !important;
+            background: #f97316 !important;
         }
 
         .py-3 {
@@ -479,7 +479,7 @@
         </div>
     </div>
 
-    <div class="border mb-4 p-3" style="background-color: #EDF9F859; border-color: #14b19e29 !important;">
+    <div class="border mb-4 p-3" style="background-color: #FFF4ED59; border-color: #f9731629 !important;">
         <div class="text-dark">
             <h4 class="fw-medium text-primary" style="margin:0 0 10px">
                 {{ translate('Payment_Info') }}:
@@ -557,9 +557,9 @@
             <td class="text-end p-3">{{set_currency_symbol($actualFare)}}</td>
         </tr>
         <tr>
-            <td class="p-3" style="background-color: #e0fffb">2</td>
-            <td class="p-3" style="background-color: #e0fffb">{{translate('discount_amount')}}</td>
-            <td class="text-end p-3" style="background-color: #e0fffb">
+            <td class="p-3" style="background-color: #fff4ed">2</td>
+            <td class="p-3" style="background-color: #fff4ed">{{translate('discount_amount')}}</td>
+            <td class="text-end p-3" style="background-color: #fff4ed">
                 - {{set_currency_symbol($data->discount_amount + 0 )}}</td>
         </tr>
         <tr>
@@ -569,14 +569,14 @@
         </tr>
         @if($data->type != 'parcel')
             <tr>
-                <td class="p-3" style="vertical-align:top;background-color: #e0fffb">4</td>
-                <td class="p-3" style="line-height:1.8;background-color: #e0fffb">
+                <td class="p-3" style="vertical-align:top;background-color: #fff4ed">4</td>
+                <td class="p-3" style="line-height:1.8;background-color: #fff4ed">
                     <div>{{translate('Additional_Fee')}}</div>
                     <div>{{translate('delay_fee')}}</div>
                     <div>{{translate('idle_fee')}}</div>
                     <div>{{translate('cancellation_fee')}}</div>
                 </td>
-                <td class="text-end p-3" style="line-height:1.8;background-color: #e0fffb">
+                <td class="text-end p-3" style="line-height:1.8;background-color: #fff4ed">
                     <div>
                         + {{set_currency_symbol($data?->fee?->delay_fee+$data?->fee?->idle_fee+$data?->fee?->cancellation_fee)}}</div>
                     <div>{{set_currency_symbol($data?->fee?->delay_fee)}}</div>
@@ -590,21 +590,21 @@
         ?>
         <tr>
             <td class="p-3"
-                style="background-color: @if($data->type == 'parcel') #e0fffb @endif">{{ $data->type == 'parcel' ? 4:5 }}</td>
+                style="background-color: @if($data->type == 'parcel') #fff4ed @endif">{{ $data->type == 'parcel' ? 4:5 }}</td>
             <td class="p-3"
-                style="background-color: @if($data->type == 'parcel') #e0fffb @endif">{{translate('VAT/Tax')}} <small
+                style="background-color: @if($data->type == 'parcel') #fff4ed @endif">{{translate('VAT/Tax')}} <small
                     class="font-semi-bold"><strong>({{ round((($data?->fee?->vat_tax ?? 0) * 100) / ( $totalAmount == 0 ? 1: $totalAmount)) }}
                         %)</strong></small></td>
-            <td class="text-end p-3" style="background-color: @if($data->type == 'parcel') #e0fffb @endif">
+            <td class="text-end p-3" style="background-color: @if($data->type == 'parcel') #fff4ed @endif">
                 + {{set_currency_symbol($data?->fee?->vat_tax + 0)}}</td>
         </tr>
         @if($data->tips>0)
             <tr>
                 <td class="p-3"
-                    style="background-color: @if($data->type != 'parcel') #e0fffb @endif">{{ $data->type == 'parcel' ? 5:8 }}</td>
+                    style="background-color: @if($data->type != 'parcel') #fff4ed @endif">{{ $data->type == 'parcel' ? 5:8 }}</td>
                 <td class="p-3"
-                    style="background-color: @if($data->type != 'parcel') #e0fffb @endif">{{translate('tips')}}</td>
-                <td class="text-end p-3" style="background-color: @if($data->type != 'parcel') #e0fffb @endif">
+                    style="background-color: @if($data->type != 'parcel') #fff4ed @endif">{{translate('tips')}}</td>
+                <td class="text-end p-3" style="background-color: @if($data->type != 'parcel') #fff4ed @endif">
                     + {{set_currency_symbol($data->tips + 0)}}</td>
             </tr>
         @endif
@@ -636,7 +636,7 @@
             {{ translate('contact_us') }}</a> {{ translate('for any queries') }}.
     </p>
 
-    <div class="p-3" style="background-color: #e0fffb">
+    <div class="p-3" style="background-color: #fff4ed">
         <table class="w-100">
             <tbody>
             <tr>
