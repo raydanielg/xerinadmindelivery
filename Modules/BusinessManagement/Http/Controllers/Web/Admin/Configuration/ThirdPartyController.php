@@ -7,6 +7,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
@@ -49,6 +50,37 @@ class ThirdPartyController extends BaseController
         $this->businessSettingService->storeEmailConfig($request->validated());
         Toastr::success(CONFIGURATION_UPDATE_200['message']);
         return back();
+    }
+
+    public function sendTestEmail(Request $request): JsonResponse
+    {
+        $this->authorize('business_edit');
+
+        $request->validate([
+            'test_email' => 'required|email',
+        ]);
+
+        $to = $request->input('test_email');
+        $businessName = businessConfig(key: 'business_name', settingsType: 'business_information')?->value ?? 'Xerin Express';
+
+        try {
+            Mail::raw(
+                "This is a test email from {$businessName}.\n\nIf you received this message, your email configuration is working correctly.\n\nSent at: " . now()->toDateTimeString(),
+                function ($message) use ($to, $businessName) {
+                    $message->to($to)->subject("Test Email - {$businessName}");
+                }
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Test email sent successfully to ' . $to,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send test email: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function recaptcha()

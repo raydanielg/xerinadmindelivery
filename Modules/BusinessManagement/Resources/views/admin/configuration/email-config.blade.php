@@ -94,6 +94,30 @@
                     </form>
                 </div>
             </div>
+
+            {{-- Test Email Section --}}
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="text-primary text-uppercase mb-3">{{translate('test_email')}}</h5>
+                    <p class="text-muted mb-3" style="font-size: 13px;">{{translate('send_a_test_email_to_verify_your_mail_configuration')}}</p>
+                    <div class="row align-items-end">
+                        <div class="col-sm-8">
+                            <div class="mb-2">
+                                <label for="test_email" class="mb-2">{{translate('test_email_address')}}</label>
+                                <input type="email" name="test_email"
+                                       class="form-control" id="test_email"
+                                       placeholder="{{translate('demo@example.com')}}" tabindex="10">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-outline-primary w-100" id="send_test_email_btn" tabindex="11">
+                                <i class="bi bi-send me-1"></i>{{translate('send_test_email')}}
+                            </button>
+                        </div>
+                    </div>
+                    <div id="test_email_result" class="mt-3" style="display: none;"></div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- End Main Content -->
@@ -115,6 +139,51 @@
                 toastr.error('{{ translate('you_do_not_have_enough_permission_to_update_this_settings') }}');
                 e.preventDefault();
             }
+        });
+
+        $('#send_test_email_btn').on('click', function () {
+            if (!permission) {
+                toastr.error('{{ translate('you_do_not_have_enough_permission_to_update_this_settings') }}');
+                return;
+            }
+
+            const email = $('#test_email').val().trim();
+            if (!email) {
+                toastr.error('{{ translate('please_enter_a_valid_email_address') }}');
+                return;
+            }
+
+            const $btn = $(this);
+            const $result = $('#test_email_result');
+            const originalHtml = $btn.html();
+
+            $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>{{translate('sending...')}}');
+            $result.hide();
+
+            $.ajax({
+                url: '{{ route("admin.business.configuration.third-party.email-config.test") }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    test_email: email,
+                },
+                success: function (response) {
+                    $result.removeClass('alert-danger').addClass('alert alert-success').html(
+                        '<i class="bi bi-check-circle me-1"></i>' + response.message
+                    ).show();
+                    toastr.success(response.message);
+                },
+                error: function (xhr) {
+                    const msg = xhr.responseJSON?.message || 'Failed to send test email.';
+                    $result.removeClass('alert-success').addClass('alert alert-danger').html(
+                        '<i class="bi bi-exclamation-triangle me-1"></i>' + msg
+                    ).show();
+                    toastr.error(msg);
+                },
+                complete: function () {
+                    $btn.prop('disabled', false).html(originalHtml);
+                }
+            });
         });
     </script>
 

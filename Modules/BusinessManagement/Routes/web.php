@@ -206,6 +206,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], f
                     Route::group(['prefix' => 'email-config', 'as' => 'email-config.'], function () {
                         Route::get('/', 'emailConfig')->name('index');
                         Route::post('update', 'updateEmailConfig')->name('update');
+                        Route::post('test', 'sendTestEmail')->name('test');
                     });
                     Route::group(['prefix' => 'recaptcha', 'as' => 'recaptcha.'], function () {
                         Route::get('/', 'recaptcha')->name('index');
