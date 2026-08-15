@@ -15,6 +15,7 @@ class Role extends Model
     protected $fillable = [
         'name',
         'modules',
+        'permissions',
         'is_active',
         'deleted_at',
         'created_at',
@@ -22,6 +23,7 @@ class Role extends Model
     ];
     protected $casts = [
         'modules' => 'array',
+        'permissions' => 'array',
     ];
     protected static function newFactory()
     {

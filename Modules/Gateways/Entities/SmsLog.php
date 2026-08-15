@@ -32,4 +32,17 @@ class SmsLog extends Model
     {
         return $query->where('status', 'error');
     }
+
+    public function getMaskedReceiverAttribute(): string
+    {
+        return maskPhoneNumber($this->receiver);
+    }
+
+    public function getRedactedMessageAttribute(): string
+    {
+        if ($this->type === 'otp') {
+            return '[OTP REDACTED]';
+        }
+        return redactOtpMessage($this->message);
+    }
 }

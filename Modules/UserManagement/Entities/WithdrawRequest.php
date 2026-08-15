@@ -20,6 +20,7 @@ class WithdrawRequest extends Model
         'denied_note',
         'rejection_cause',
         'is_approved',
+        'approved_by',
         'status',
         'created_at',
         'updated_at',

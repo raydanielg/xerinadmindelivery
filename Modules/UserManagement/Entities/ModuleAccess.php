@@ -19,6 +19,9 @@ class ModuleAccess extends Model
         'delete',
         'log',
         'export',
+        'approve',
+        'refund',
+        'payout',
         'created_at',
         'updated_at',
     ];
@@ -29,7 +32,10 @@ class ModuleAccess extends Model
         'update'=>'boolean',
         'delete'=>'boolean',
         'log'=>'boolean',
-        'export'=>'boolean'
+        'export'=>'boolean',
+        'approve'=>'boolean',
+        'refund'=>'boolean',
+        'payout'=>'boolean',
     ];
 
     protected static function newFactory()

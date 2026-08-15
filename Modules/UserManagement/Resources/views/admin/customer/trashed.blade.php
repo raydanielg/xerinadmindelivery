@@ -110,11 +110,11 @@
                                                         </td>
                                                         <td class="contact-info">
                                                             <div class="title-color"><a
-                                                                    href="tel:{{ $customer->phone }}">{{ $customer->phone }}</a>
+                                                                    href="tel:{{ $customer->phone }}">{{ maskPhoneNumber($customer->phone) }}</a>
                                                             </div>
                                                             <div>
                                                                 <a
-                                                                    href="mailto:{{ $customer->email }}">{{ $customer->email }}</a>
+                                                                    href="mailto:{{ $customer->email }}">{{ maskEmail($customer->email) }}</a>
                                                             </div>
                                                         </td>
                                                         <td class="level">{{ $customer->level?->name }}</td>

@@ -556,7 +556,7 @@ trait  SmsGateway
             $logData = [
                 'gateway' => 'mshastra_sms',
                 'receiver' => $receiver,
-                'message' => str_replace("#OTP#", $otp, $config['otp_template'] ?? 'Your OTP is #OTP#'),
+                'message' => '[OTP REDACTED]',
                 'type' => 'otp',
             ];
             try {
@@ -636,7 +636,7 @@ trait  SmsGateway
             $logData = [
                 'gateway' => 'hesed_sms',
                 'receiver' => $receiver,
-                'message' => str_replace("#OTP#", $otp, $config['otp_template'] ?? 'Your OTP is #OTP#'),
+                'message' => '[OTP REDACTED]',
                 'type' => 'otp',
             ];
             try {

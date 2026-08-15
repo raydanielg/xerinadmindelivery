@@ -120,7 +120,7 @@
                                                          data-bs-title="{{ translate('on_hold') }}">
                                                 @endif
                                             </div>
-                                            <div class="fs-12 opacity-75">{{ $unverifiedDriver->driver->phone }}</div>
+                                            <div class="fs-12 opacity-75">{{ maskPhoneNumber($unverifiedDriver->driver->phone) }}</div>
                                         </div>
                                     </a>
                                 </td>

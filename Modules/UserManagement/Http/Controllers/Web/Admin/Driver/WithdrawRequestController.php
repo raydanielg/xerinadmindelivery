@@ -84,7 +84,18 @@ class WithdrawRequestController extends BaseController
                 Toastr::error(translate("Withdraw method or driver not found"));
                 return redirect()->back();
             }
-            $this->withdrawRequestService->update(id: $id, data: $request->all());
+            if ($request->status == SETTLED) {
+                $this->authorize('transaction_payout');
+            }
+            if ($request->status == APPROVED) {
+                $this->authorize('transaction_approve');
+            }
+            try {
+                $this->withdrawRequestService->update(id: $id, data: $request->all());
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                Toastr::error($e->getMessage());
+                return redirect()->back();
+            }
             Toastr::success(translate('Withdraw request updated successfully.'));
             return redirect(route('admin.driver.withdraw.requests'));
         }

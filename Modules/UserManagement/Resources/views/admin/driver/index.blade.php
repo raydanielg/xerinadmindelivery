@@ -168,10 +168,10 @@
                                                     </td>
                                                     <td class="contact-info">
                                                         <div class="title-color"><a
-                                                                href="tel:{{ $driver->phone }}">{{ $driver->phone }}</a>
+                                                                href="tel:{{ $driver->phone }}">{{ maskPhoneNumber($driver->phone) }}</a>
                                                         </div>
                                                         <div><a
-                                                                href="mailto:{{ $driver->email }}">{{ $driver->email }}</a>
+                                                                href="mailto:{{ $driver->email }}">{{ maskEmail($driver->email) }}</a>
                                                         </div>
                                                     </td>
 

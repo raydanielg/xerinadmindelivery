@@ -26,7 +26,7 @@
                             </tr>
                             <tr>
                                 <th>{{translate('Receiver')}}</th>
-                                <td>{{$log->receiver}}</td>
+                                <td>{{$log->masked_receiver}}</td>
                             </tr>
                             <tr>
                                 <th>{{translate('Type')}}</th>
@@ -46,7 +46,7 @@
                             </tr>
                             <tr>
                                 <th>{{translate('Message')}}</th>
-                                <td><pre class="mb-0" style="white-space: pre-wrap;">{{$log->message}}</pre></td>
+                                <td><pre class="mb-0" style="white-space: pre-wrap;">{{$log->redacted_message}}</pre></td>
                             </tr>
                             <tr>
                                 <th>{{translate('Response')}}</th>

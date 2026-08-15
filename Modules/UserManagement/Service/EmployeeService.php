@@ -145,6 +145,9 @@ class EmployeeService extends BaseService implements Interfaces\EmployeeServiceI
                 'delete' => in_array('delete', $permission),
                 'log' => in_array('log', $permission),
                 'export' => in_array('export', $permission) ? 1 : 0,
+                'approve' => in_array('approve', $permission),
+                'refund' => in_array('refund', $permission),
+                'payout' => in_array('payout', $permission),
             ]);
         }
         return true;

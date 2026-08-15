@@ -15,6 +15,7 @@ use Modules\TripManagement\Http\Requests\ParcelRefundRequestApprovedOrDeniedStor
 use Modules\TripManagement\Http\Requests\ParcelRefundRequestRefundedStoreRequest;
 use Modules\TripManagement\Service\Interfaces\ParcelRefundServiceInterface;
 use Modules\TripManagement\Service\Interfaces\TripRequestServiceInterface;
+use Modules\AdminModule\Entities\ActivityLog;
 use App\Exports\StyledReport\ColumnFormat;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -69,7 +70,7 @@ class RefundController extends BaseController
 
     public function storeApproved($id, ParcelRefundRequestApprovedOrDeniedStoreRequest $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse
     {
-        $this->authorize('trip_edit');
+        $this->authorize('transaction_refund');
         $parcelRefund = $this->parcelRefundService->findOne(id: $id);
         if (!$parcelRefund) {
             Toastr::error(PARCEL_REFUND_REQUEST_404['message']);
@@ -77,6 +78,7 @@ class RefundController extends BaseController
         }
         $data = array_merge($request->validated(), ['status' => APPROVED]);
         $this->parcelRefundService->update(id: $id, data: $data);
+        $this->logRefundAction($id, APPROVED, $request->validated());
         if ($parcelRefund?->tripRequest?->driver?->fcm_token) {
             try {
                 $push = getNotification('refund_accepted');
@@ -117,7 +119,7 @@ class RefundController extends BaseController
 
     public function storeDenied($id, ParcelRefundRequestApprovedOrDeniedStoreRequest $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse
     {
-        $this->authorize('trip_edit');
+        $this->authorize('transaction_refund');
         $parcelRefund = $this->parcelRefundService->findOne(id: $id);
         if (!$parcelRefund) {
             Toastr::error(PARCEL_REFUND_REQUEST_404['message']);
@@ -125,6 +127,7 @@ class RefundController extends BaseController
         }
         $data = array_merge($request->validated(), ['status' => DENIED]);
         $this->parcelRefundService->update(id: $id, data: $data);
+        $this->logRefundAction($id, DENIED, $request->validated());
         if ($parcelRefund?->tripRequest?->driver?->fcm_token) {
             try {
                 $push = getNotification('refund_denied');
@@ -165,7 +168,7 @@ class RefundController extends BaseController
 
     public function store($id, ParcelRefundRequestRefundedStoreRequest $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse
     {
-        $this->authorize('trip_edit');
+        $this->authorize('transaction_refund');
         $parcelRefund = $this->parcelRefundService->findOne(id: $id);
         if (!$parcelRefund) {
             Toastr::error(PARCEL_REFUND_REQUEST_404['message']);
@@ -173,6 +176,7 @@ class RefundController extends BaseController
         }
         $data = array_merge($request->validated(), ['status' => REFUNDED]);
         $this->parcelRefundService->update(id: $id, data: $data);
+        $this->logRefundAction($id, REFUNDED, $request->validated());
         $parcelRefund = $this->parcelRefundService->findOne(id: $id);
         if ($parcelRefund?->tripRequest?->driver?->fcm_token) {
             try {
@@ -254,7 +258,7 @@ class RefundController extends BaseController
             'Category' => $item['tripRequest']['parcel']['parcelCategory']->name,
             'Approximate Price' => $item['parcel_approximate_price'],
             'Customer Name' => $item['tripRequest']['customer']->full_name,
-            'Customer Phone' => $item['tripRequest']['customer']->phone,
+            'Customer Phone' => maskPhoneNumber($item['tripRequest']['customer']->phone),
             'Refund Reason' => $item['reason'],
             'Refund Status' => ucwords($item['status'])
         ]);
@@ -275,5 +279,20 @@ class RefundController extends BaseController
             headings: ['Refund ID', 'Trip ID', 'Date', 'Category', 'Approximate Price', 'Customer Name', 'Customer Phone', 'Refund Reason', 'Refund Status'],
         );
         return exportData($data, $request['file'], 'tripmanagement::admin.refund.print', $config);
+    }
+
+    private function logRefundAction($id, $status, $data): void
+    {
+        try {
+            $activityLog = new ActivityLog();
+            $activityLog->edited_by = auth()->user()->id;
+            $activityLog->before = ['refund_id' => $id];
+            $activityLog->after = ['action' => $status, 'note' => $data['approved_note'] ?? $data['denied_note'] ?? null];
+            $activityLog->user_type = auth()->user()->user_type;
+            $activityLog->logable_type = 'parcel_refund';
+            $activityLog->logable_id = $id;
+            $activityLog->save();
+        } catch (\Exception $e) {
+        }
     }
 }

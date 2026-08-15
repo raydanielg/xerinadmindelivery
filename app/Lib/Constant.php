@@ -2727,10 +2727,11 @@ const MODULES = [
     'vehicle_management' => ['view', 'add', 'update', 'delete', 'log', 'export'],
     'fare_management' => ['view', 'add', 'update', 'delete', 'log', 'export'],
     'user_management' => ['view', 'add', 'update', 'delete', 'log', 'export'],
-    'transaction_management' => ['view', 'export'],
+    'transaction_management' => ['view', 'export', 'approve', 'refund', 'payout'],
     'business_management' => ['view', 'update', 'delete'],
     'help_and_support' => ['view'],
     'blog_management' => ['view', 'add', 'update', 'delete', 'log', 'export'],
+    'gateway_management' => ['view'],
 ];
 
 const TELEPHONE_CODES = [

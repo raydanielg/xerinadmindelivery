@@ -93,6 +93,17 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('blog_log', fn () => $this->checkAccess('blog_management', 'log'));
         Gate::define('blog_export', fn () => $this->checkAccess('blog_management', 'export'));
 
+        Gate::define('sms_log_view', fn () => auth()->user()->user_type == 'super-admin' ||
+            (in_array('gateway_management', auth()->user()->role->modules) && auth()->user()->moduleAccess->where('module_name', 'gateway_management')->first()?->view));
+
+        Gate::define('sms_log_delete', fn () => auth()->user()->user_type == 'super-admin');
+
+        Gate::define('sms_log_clear', fn () => auth()->user()->user_type == 'super-admin');
+
+        Gate::define('transaction_approve', fn () => $this->checkAccess('transaction_management', 'approve'));
+        Gate::define('transaction_refund', fn () => $this->checkAccess('transaction_management', 'refund'));
+        Gate::define('transaction_payout', fn () => $this->checkAccess('transaction_management', 'payout'));
+
     }
 
     private function checkAccess($module_name, $action){

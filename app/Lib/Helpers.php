@@ -1756,6 +1756,48 @@ if (!function_exists('isOtpEnabled')) {
     }
 }
 
+if (!function_exists('maskPhoneNumber')) {
+    function maskPhoneNumber(?string $phone): string
+    {
+        if (!$phone) {
+            return 'N/A';
+        }
+        $digits = preg_replace('/\D/', '', $phone);
+        if (strlen($digits) <= 4) {
+            return str_repeat('*', strlen($digits));
+        }
+        return str_repeat('*', strlen($digits) - 4) . substr($digits, -4);
+    }
+}
+
+if (!function_exists('redactOtpMessage')) {
+    function redactOtpMessage(?string $message): string
+    {
+        if (!$message) {
+            return 'N/A';
+        }
+        return preg_replace('/\b\d{4,8}\b/', '[REDACTED]', $message);
+    }
+}
+
+if (!function_exists('maskEmail')) {
+    function maskEmail(?string $email): string
+    {
+        if (!$email) {
+            return 'N/A';
+        }
+        $parts = explode('@', $email);
+        if (count($parts) !== 2) {
+            return 'N/A';
+        }
+        $local = $parts[0];
+        if (strlen($local) <= 2) {
+            return str_repeat('*', strlen($local)) . '@' . $parts[1];
+        }
+        return substr($local, 0, 2) . str_repeat('*', max(1, strlen($local) - 2)) . '@' . $parts[1];
+    }
+}
+
 
 
 

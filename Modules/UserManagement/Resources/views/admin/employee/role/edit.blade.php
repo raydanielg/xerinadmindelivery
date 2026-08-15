@@ -45,6 +45,44 @@
                                 @endforeach
                             </div>
                         </div>
+
+                        <div class="mt-4" id="module-permissions-grid">
+                            <h6 class="fw-bold mb-3 text-capitalize">{{translate('Action Permissions per Module')}}</h6>
+                            <p class="text-muted small mb-3">{{translate('Select which actions each module allows. These will be used as defaults when assigning employees.')}}</p>
+                            @php
+                                $savedPermissions = [];
+                                if (isset($role->permissions) && is_array($role->permissions)) {
+                                    $savedPermissions = $role->permissions;
+                                }
+                            @endphp
+                            @foreach(MODULES as $key => $actions)
+                                <div class="card border-0 shadow-none mb-2 module-permission-block" data-module="{{$key}}" style="display:none;">
+                                    <div class="p-3 pb-0">
+                                        <div class="d-flex gap-3 flex-wrap justify-content-between align-items-center">
+                                            <h6 class="fw-semibold text-capitalize">{{translate($key)}}</h6>
+                                            <label class="custom-checkbox">
+                                                <input type="checkbox" class="select-all-actions" data-module="{{$key}}">
+                                                {{translate('Select all')}}
+                                            </label>
+                                        </div>
+                                        <hr class="off-white-gray">
+                                    </div>
+                                    <div class="card-body pt-0">
+                                        <div class="row">
+                                            @foreach($actions as $permission)
+                                                <div class="col">
+                                                    <label class="custom-checkbox pb-3">
+                                                        <input type="checkbox" name="permissions[{{$key}}][]" value="{{$permission}}" class="action-checkbox" data-module="{{$key}}"
+                                                            {{ (isset($savedPermissions[$key]) && in_array($permission, $savedPermissions[$key])) ? 'checked' : '' }}>
+                                                        {{translate($permission)}}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                         <div class="d-flex gap-3 flex-wrap justify-content-end mt-5">
                             <button
                                 class="btn btn-secondary h-40px min-w-100px justify-content-center text-uppercase" tabindex="2"
@@ -67,13 +105,35 @@
         checkboxes.forEach(function(checkbox) {
             checkbox.checked = this.checked;
         }, this);
-
-        updateSelectAllStatus(); // Update the "Select All" checkbox status
+        updatePermissionBlocks();
+        updateSelectAllStatus();
     });
 
     document.querySelectorAll('.module-checkbox').forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
-            updateSelectAllStatus(); // Update the "Select All" checkbox status
+            updatePermissionBlocks();
+            updateSelectAllStatus();
+        });
+    });
+
+    function updatePermissionBlocks() {
+        document.querySelectorAll('.module-checkbox').forEach(function (cb) {
+            var block = document.querySelector('.module-permission-block[data-module="' + cb.value + '"]');
+            if (block) {
+                block.style.display = cb.checked ? '' : 'none';
+                if (!cb.checked) {
+                    block.querySelectorAll('.action-checkbox').forEach(function (ac) { ac.checked = false; });
+                }
+            }
+        });
+    }
+
+    document.querySelectorAll('.select-all-actions').forEach(function (cb) {
+        cb.addEventListener('change', function () {
+            var mod = this.dataset.module;
+            document.querySelectorAll('.action-checkbox[data-module="' + mod + '"]').forEach(function (ac) {
+                ac.checked = this.checked;
+            }, this);
         });
     });
 
@@ -98,5 +158,7 @@
             selectAllCheckbox.checked = false;
         }
     }
+
+    updatePermissionBlocks();
 </script>
 @endpush

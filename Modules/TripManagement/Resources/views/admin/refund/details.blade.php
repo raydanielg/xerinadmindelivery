@@ -41,9 +41,9 @@
                                                     </h6>
                                                     <div
                                                         class="badge bg-primary">{{ $trip->driver->level?->name }}</div>
-                                                    <a href="tel:{{ $trip->driver->phone }}">{{ $trip->driver->phone }}</a>
+                                                    <a href="tel:{{ $trip->driver->phone }}">{{ maskPhoneNumber($trip->driver->phone) }}</a>
                                                     <a
-                                                        href="mailto:{{ $trip->driver->email }}">{{ $trip->driver->email }}</a>
+                                                        href="mailto:{{ $trip->driver->email }}">{{ maskEmail($trip->driver->email) }}</a>
                                                 </div>
                                             </div>
                                         </div>

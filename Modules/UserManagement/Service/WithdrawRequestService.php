@@ -8,6 +8,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Modules\AdminModule\Entities\ActivityLog;
 use Modules\TransactionManagement\Traits\TransactionTrait;
 use Modules\UserManagement\Entities\WithdrawRequest;
 use Modules\UserManagement\Repository\WithdrawMethodRepositoryInterface;
@@ -40,14 +41,18 @@ class WithdrawRequestService extends BaseService implements WithdrawRequestServi
             $attributes['denied_note'] = $data['denied_note'];
         }
 
+        $adminId = auth()->user()->id;
+
         if ($data['status'] == 'reverse' && $withdrawRequest->status != PENDING) {
             $attributes['status'] = PENDING;
+            $attributes['approved_by'] = null;
             $withdrawRequestData = $this->withdrawRequestRepository->update(id: $id, data: $attributes);
             $this->withdrawRequestReverseTransaction($withdrawRequest->user, $withdrawRequest->amount, $withdrawRequest);
             $this->withdrawRequestNotificationSendDriver(data: $data, withdrawRequestData: $withdrawRequestData);
         }
         if ($withdrawRequest->status == PENDING && $data['status'] == APPROVED) {
             $attributes['status'] = APPROVED;
+            $attributes['approved_by'] = $adminId;
             $withdrawRequestData = $this->withdrawRequestRepository->update(id: $id, data: $attributes);
             $this->withdrawRequestNotificationSendDriver(data: $data, withdrawRequestData: $withdrawRequestData);
         }
@@ -58,10 +63,20 @@ class WithdrawRequestService extends BaseService implements WithdrawRequestServi
             $this->withdrawRequestNotificationSendDriver(data: $data, withdrawRequestData: $withdrawRequestData);
         }
         if ($withdrawRequest->status == APPROVED && $data['status'] == SETTLED) {
+            if ($withdrawRequest->approved_by == $adminId) {
+                throw new \Illuminate\Validation\ValidationException(
+                    \Illuminate\Support\Facades\Validator::make([], []),
+                    'Maker cannot settle their own approved request. A different approver is required.'
+                );
+            }
             $attributes['status'] = SETTLED;
             $withdrawRequestData = $this->withdrawRequestRepository->update(id: $id, data: $attributes);
             $this->withdrawRequestAcceptTransaction($withdrawRequest->user, $withdrawRequest->amount, $withdrawRequest);
             $this->withdrawRequestNotificationSendDriver(data: $data, withdrawRequestData: $withdrawRequestData);
+        }
+
+        if ($withdrawRequestData) {
+            $this->logWithdrawAction($withdrawRequest, $data, $adminId);
         }
 
         return $withdrawRequestData;
@@ -70,12 +85,22 @@ class WithdrawRequestService extends BaseService implements WithdrawRequestServi
     public function multipleUpdate(array $data = []): void
     {
         if (array_key_exists('status', $data) && !is_null($data['status']) && array_key_exists('ids', $data) && (count($data['ids']) > 0)) {
+            $adminId = auth()->user()->id;
             foreach ($data['ids'] as $id) {
                 $withdrawRequest = $this->withdrawRequestRepository->findOne(id: $id, relations: ['user' => []]);
                 if ($data['status'] == 'reverse') {
                     $attributes['status'] = PENDING;
+                    $attributes['approved_by'] = null;
                 } else {
                     $attributes['status'] = $data['status'];
+                }
+
+                if ($data['status'] == APPROVED) {
+                    $attributes['approved_by'] = $adminId;
+                }
+
+                if ($data['status'] == SETTLED && $withdrawRequest->approved_by == $adminId) {
+                    continue;
                 }
 
                 if (array_key_exists('rejection_cause', $data) && !is_null($data['rejection_cause'])) {
@@ -147,6 +172,28 @@ class WithdrawRequestService extends BaseService implements WithdrawRequestServi
                 action: $push['action'],
                 user_id: $withdrawRequestData?->user->id
             );
+        }
+    }
+
+    private function logWithdrawAction($withdrawRequest, $data, $adminId): void
+    {
+        try {
+            $activityLog = new ActivityLog();
+            $activityLog->edited_by = $adminId;
+            $activityLog->before = [
+                'withdraw_request_id' => $withdrawRequest->id,
+                'previous_status' => $withdrawRequest->status,
+                'amount' => $withdrawRequest->amount,
+            ];
+            $activityLog->after = [
+                'action' => $data['status'],
+                'note' => $data['approval_note'] ?? $data['denied_note'] ?? $data['rejection_cause'] ?? null,
+            ];
+            $activityLog->user_type = auth()->user()->user_type;
+            $activityLog->logable_type = WithdrawRequest::class;
+            $activityLog->logable_id = $withdrawRequest->id;
+            $activityLog->save();
+        } catch (\Exception $e) {
         }
     }
 

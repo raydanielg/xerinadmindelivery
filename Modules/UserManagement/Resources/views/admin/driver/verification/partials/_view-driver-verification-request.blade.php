@@ -22,7 +22,7 @@
                         <div class="">
                             <h6 class="mb-2">{{ ($unverifiedDriverInfo->driver->first_name ?? '') . ' ' . ($unverifiedDriverInfo->driver->last_name ?? '') }}</h6>
                             <p class="fs-12 mb-2">ID #{{ $unverifiedDriverInfo->driver->id }}</p>
-                            <p class="fs-12 mb-2">{{ $unverifiedDriverInfo->driver->phone }}</p>
+                            <p class="fs-12 mb-2">{{ maskPhoneNumber($unverifiedDriverInfo->driver->phone) }}</p>
                             <div
                                 class="badge text-bg-success bg-opacity-10 text-body fs-12 fw-normal">{{ translate($unverifiedDriverInfo->driver->level->name) }}</div>
                         </div>

@@ -18,12 +18,11 @@
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fs-22">{{translate('SMS Logs & Messages')}}</h2>
-                <form action="{{route('admin.gateways.sms-logs.clear')}}" method="POST" onsubmit="return confirm('Are you sure you want to clear all SMS logs?')">
-                    @csrf
-                    <button type="submit" class="btn btn-danger btn-sm">
+                @can('sms_log_clear')
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#clearLogsModal">
                         <i class="bi bi-trash"></i> {{translate('Clear All Logs')}}
                     </button>
-                </form>
+                @endcan
             </div>
 
             <!-- Stats Cards -->
@@ -86,7 +85,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">{{translate('Search')}}</label>
-                            <input type="text" name="search" class="form-control" placeholder="{{translate('Phone, message...')}}" value="{{request('search')}}">
+                            <input type="text" name="search" class="form-control" placeholder="{{translate('Gateway, type...')}}" value="{{request('search')}}">
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> {{translate('Filter')}}</button>
@@ -118,8 +117,8 @@
                                     <tr>
                                         <td>{{$log->id}}</td>
                                         <td><span class="badge bg-info">{{$log->gateway}}</span></td>
-                                        <td>{{$log->receiver}}</td>
-                                        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{\Illuminate\Support\Str::limit($log->message, 80)}}</td>
+                                        <td>{{$log->masked_receiver}}</td>
+                                        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{\Illuminate\Support\Str::limit($log->redacted_message, 80)}}</td>
                                         <td><span class="badge bg-secondary">{{$log->type}}</span></td>
                                         <td>
                                             @if($log->status == 'success')
@@ -152,4 +151,37 @@
             </div>
         </div>
     </div>
+
+    @can('sms_log_clear')
+    <div class="modal fade" id="clearLogsModal" tabindex="-1" aria-labelledby="clearLogsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{route('admin.gateways.sms-logs.clear')}}" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger" id="clearLogsModalLabel">
+                            <i class="bi bi-exclamation-triangle-fill"></i> {{translate('Clear All SMS Logs')}}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning">
+                            {{translate('This action will permanently delete all SMS log records. An audit entry will be created with your name and reason. This action cannot be undone.')}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="clearReason" class="form-label fw-bold">{{translate('Reason (required)')}}</label>
+                            <textarea name="reason" id="clearReason" class="form-control" rows="3" required minlength="5" maxlength="500" placeholder="{{translate('Please provide a reason for clearing all logs...')}}"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{translate('Cancel')}}</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> {{translate('Confirm Clear All')}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endcan
 @endsection

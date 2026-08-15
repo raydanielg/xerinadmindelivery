@@ -47,7 +47,9 @@ class EmployeeRoleController extends BaseController
     public function store(RoleStoreOrUpdateRequest $request): RedirectResponse|Renderable
     {
         $this->authorize('user_add');
-        $this->employeeRoleService->create($request->validated());
+        $data = $request->validated();
+        $data['permissions'] = $request->input('permissions', []);
+        $this->employeeRoleService->create($data);
         Toastr::success(ROLE_STORE_200['message']);
         return back();
 
@@ -63,7 +65,9 @@ class EmployeeRoleController extends BaseController
     public function update(Request $request, $id): Renderable|RedirectResponse
     {
         $this->authorize('user_edit');
-        $this->employeeRoleService->update(id: $id, data: $request->all());
+        $data = $request->all();
+        $data['permissions'] = $request->input('permissions', []);
+        $this->employeeRoleService->update(id: $id, data: $data);
         return redirect(route('admin.employee.role.index'));
     }
 
