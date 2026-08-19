@@ -7,6 +7,7 @@ use App\Events\DriverTripAcceptedEvent;
 use App\Events\DriverTripCancelledEvent;
 use App\Events\DriverTripCompletedEvent;
 use App\Events\DriverTripStartedEvent;
+use App\Events\OrderSmsNotificationEvent;
 use App\Jobs\SendPushNotificationJob;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -446,6 +447,12 @@ class TripRequestController extends Controller
 
         }
 
+        try {
+            event(new OrderSmsNotificationEvent($trip, 'ongoing'));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('OrderSms: ongoing event failed: ' . $e->getMessage());
+        }
+
         return response()->json(responseFormatter(DEFAULT_STORE_200));
     }
 
@@ -653,6 +660,12 @@ class TripRequestController extends Controller
             user_id: $trip->customer->id
         );
 
+        try {
+            event(new OrderSmsNotificationEvent($trip, 'returned'));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('OrderSms: returned event failed: ' . $e->getMessage());
+        }
+
         return response()->json(responseFormatter(DEFAULT_UPDATE_200, TripRequestResource::make($trip)));
     }
 
@@ -801,6 +814,14 @@ class TripRequestController extends Controller
             }
         }
 
+        try {
+            $smsStatus = $request->status == 'cancelled' ? 'cancelled' : ($request->status == 'completed' ? 'completed' : null);
+            if ($smsStatus) {
+                event(new OrderSmsNotificationEvent($trip, $smsStatus));
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('OrderSms: driver status event failed: ' . $e->getMessage());
+        }
 
         return response()->json(responseFormatter(DEFAULT_UPDATE_200, $data));
     }
@@ -1027,6 +1048,13 @@ class TripRequestController extends Controller
         } catch (\Exception $exception) {
 
         }
+
+        try {
+            event(new OrderSmsNotificationEvent($trip, 'accepted'));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('OrderSms: accepted event failed: ' . $e->getMessage());
+        }
+
         return response()->json(responseFormatter(constant: DEFAULT_UPDATE_200));
     }
 

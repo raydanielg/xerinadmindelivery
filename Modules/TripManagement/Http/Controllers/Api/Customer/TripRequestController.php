@@ -4,6 +4,7 @@ namespace Modules\TripManagement\Http\Controllers\Api\Customer;
 
 use App\Events\CustomerTripCancelledAfterOngoingEvent;
 use App\Events\CustomerTripCancelledEvent;
+use App\Events\OrderSmsNotificationEvent;
 use App\Jobs\ProcessPushNotifications;
 use App\Jobs\SendPushNotificationJob;
 use Carbon\Carbon;
@@ -209,6 +210,12 @@ class TripRequestController extends Controller
             $search_radius = (double)get_cache('search_radius') ?? 5;
             $final->ride_request_type != 'scheduled' && ProcessPushNotifications::dispatch(radius: $search_radius, trip: $final, parcelWeight: $request->weight ?? null)->afterResponse();
             $trip = new TripRequestResource($final);
+
+            try {
+                event(new OrderSmsNotificationEvent($final, 'created'));
+            } catch (\Exception $e) {
+                Log::warning('OrderSms: created event failed: ' . $e->getMessage());
+            }
 
         } catch (Exception $exception) {
             DB::rollBack();
@@ -976,6 +983,14 @@ class TripRequestController extends Controller
             return $response()->json(responseFormatter(constant: DEFAULT_FAIL_200), 403);
         }
 
+        try {
+            $smsStatus = $request->status == 'cancelled' ? 'cancelled' : ($request->status == 'completed' ? 'completed' : null);
+            if ($smsStatus) {
+                event(new OrderSmsNotificationEvent($trip, $smsStatus));
+            }
+        } catch (\Exception $e) {
+            Log::warning('OrderSms: customer status event failed: ' . $e->getMessage());
+        }
 
         return response()->json(responseFormatter(DEFAULT_UPDATE_200, TripRequestResource::make($trip)));
     }

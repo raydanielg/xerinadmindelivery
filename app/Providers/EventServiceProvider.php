@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\OrderSmsNotificationEvent;
 use App\Events\StoreDriverLastLocationEvent;
 use App\Listeners\BroadcastMessage;
+use App\Listeners\SendOrderSmsListener;
 use App\Listeners\StoreDriverLastLocationToDatabase;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -21,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        OrderSmsNotificationEvent::class => [
+            SendOrderSmsListener::class,
         ],
     ];
 
