@@ -147,6 +147,9 @@
                             <a href="{{ route('admin.partnership.edit', $partner) }}" class="btn btn-outline-primary">
                                 <i class="bi bi-pencil"></i> {{ translate('Edit Partner') }}
                             </a>
+                            <a href="{{ route('admin.partnership.integration', $partner) }}" class="btn btn-outline-success">
+                                <i class="bi bi-plug"></i> {{ translate('Integration Settings') }}
+                            </a>
                             <a href="{{ route('admin.partnership.documentation') }}" class="btn btn-outline-info">
                                 <i class="bi bi-file-earmark-text"></i> {{ translate('API Documentation') }}
                             </a>

@@ -119,6 +119,39 @@ class PartnerController extends Controller
         return redirect()->route('admin.partnership.show', $partner);
     }
 
+    public function editIntegration(Partner $partner)
+    {
+        return view('admin.partnership.integration', compact('partner'));
+    }
+
+    public function updateIntegration(Request $request, Partner $partner)
+    {
+        $request->validate([
+            'partner_api_base_url' => 'nullable|url',
+            'outbound_webhook_url' => 'nullable|url',
+            'auth_method' => 'required|in:none,api_key',
+            'api_key_header' => 'nullable|string|max:100',
+            'credential_reference' => 'nullable|string|max:255|regex:#^vault://#',
+            'webhook_secret_reference' => 'nullable|string|max:255|regex:#^vault://#',
+            'enabled_events' => 'nullable|string|max:500',
+            'integration_active' => 'nullable|boolean',
+        ]);
+
+        $partner->update([
+            'partner_api_base_url' => $request->partner_api_base_url,
+            'outbound_webhook_url' => $request->outbound_webhook_url,
+            'auth_method' => $request->auth_method,
+            'api_key_header' => $request->auth_method === 'api_key' ? $request->api_key_header : 'X-API-Key',
+            'credential_reference' => $request->auth_method === 'api_key' ? $request->credential_reference : null,
+            'webhook_secret_reference' => $request->webhook_secret_reference,
+            'enabled_events' => $request->enabled_events,
+            'integration_active' => $request->has('integration_active'),
+        ]);
+
+        Toastr::success('Integration settings saved successfully.');
+        return redirect()->route('admin.partnership.show', $partner);
+    }
+
     public function documentation()
     {
         $baseUrl = config('app.url');

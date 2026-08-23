@@ -21,11 +21,20 @@ class Partner extends Model
         'status',
         'permissions',
         'last_active_at',
+        'partner_api_base_url',
+        'outbound_webhook_url',
+        'auth_method',
+        'api_key_header',
+        'credential_reference',
+        'webhook_secret_reference',
+        'enabled_events',
+        'integration_active',
     ];
 
     protected $casts = [
         'permissions' => 'array',
         'last_active_at' => 'datetime',
+        'integration_active' => 'boolean',
     ];
 
     public static function generateApiKey(): string

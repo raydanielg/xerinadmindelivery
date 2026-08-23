@@ -78,6 +78,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], f
         Route::put('update/{partner}', [PartnerController::class, 'update'])->name('update');
         Route::delete('destroy/{partner}', [PartnerController::class, 'destroy'])->name('destroy');
         Route::post('regenerate-keys/{partner}', [PartnerController::class, 'regenerateKeys'])->name('regenerate-keys');
+        Route::get('integration/{partner}', [PartnerController::class, 'editIntegration'])->name('integration');
+        Route::put('integration/{partner}', [PartnerController::class, 'updateIntegration'])->name('integration.update');
         Route::get('documentation', [PartnerController::class, 'documentation'])->name('documentation');
     });
 });
