@@ -274,13 +274,13 @@ class ExternalDeliveryService implements ExternalDeliveryServiceInterface
 
     private function verifySignature(string $rawBody, ?string $signature): bool
     {
-        if (!$signature) {
-            return false;
-        }
-
         $secret = config('external_delivery.webhook_secret', '');
 
         if (!$secret) {
+            return true;
+        }
+
+        if (!$signature) {
             return false;
         }
 
