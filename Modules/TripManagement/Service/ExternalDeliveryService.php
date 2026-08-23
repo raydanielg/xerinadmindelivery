@@ -2,6 +2,7 @@
 
 namespace Modules\TripManagement\Service;
 
+use App\Models\Partner;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Modules\TripManagement\Entities\ExternalDelivery;
@@ -12,6 +13,7 @@ class ExternalDeliveryService implements ExternalDeliveryServiceInterface
     private string $baseUrl;
     private string $apiKey;
     private string $provider;
+    private ?Partner $partner = null;
 
     public function __construct()
     {
@@ -20,10 +22,17 @@ class ExternalDeliveryService implements ExternalDeliveryServiceInterface
         $this->provider = config('external_delivery.provider', 'xerin_marketplace');
     }
 
+    public function setPartner(Partner $partner): void
+    {
+        $this->partner = $partner;
+        $this->baseUrl = $partner->partner_api_base_url ?: $this->baseUrl;
+        $this->provider = $partner->company_name ? str_slug($partner->company_name) : $this->provider;
+    }
+
     public function quoteDelivery(array $data): array
     {
         try {
-            $response = Http::withToken($this->apiKey)
+            $response = $this->buildHttpClient()
                 ->timeout(30)
                 ->post("{$this->baseUrl}/api/v1/delivery/quote", [
                     'pickup' => $data['pickup'] ?? [],
@@ -63,7 +72,7 @@ class ExternalDeliveryService implements ExternalDeliveryServiceInterface
     public function getDelivery(string $sellerOrderId): array
     {
         try {
-            $response = Http::withToken($this->apiKey)
+            $response = $this->buildHttpClient()
                 ->timeout(30)
                 ->get("{$this->baseUrl}/api/v1/delivery/seller-orders/{$sellerOrderId}");
 
@@ -100,7 +109,7 @@ class ExternalDeliveryService implements ExternalDeliveryServiceInterface
     public function requestDelivery(string $sellerOrderId): array
     {
         try {
-            $response = Http::withToken($this->apiKey)
+            $response = $this->buildHttpClient()
                 ->timeout(30)
                 ->post("{$this->baseUrl}/api/v1/delivery/seller-orders/{$sellerOrderId}/request");
 
@@ -134,10 +143,28 @@ class ExternalDeliveryService implements ExternalDeliveryServiceInterface
         }
     }
 
-    public function handleWebhook(string $provider, array $payload, ?string $signature): array
+    public function handleWebhook(string $provider, array $payload, ?string $signature, string $rawBody = ''): array
     {
         try {
-            $deliveryId = $payload['delivery_id'] ?? null;
+            if (!$this->verifySignature($rawBody, $signature)) {
+                Log::warning('Webhook signature verification failed', [
+                    'provider' => $provider,
+                ]);
+                return [
+                    'accepted' => false,
+                    'message' => 'Invalid signature',
+                ];
+            }
+
+            $eventType = $payload['event'] ?? $payload['type'] ?? null;
+            if ($eventType && !$this->isEventEnabled($eventType)) {
+                return [
+                    'accepted' => false,
+                    'message' => "Event '{$eventType}' is not enabled",
+                ];
+            }
+
+            $deliveryId = $payload['delivery_id'] ?? $payload['shipment_id'] ?? null;
             $status = $payload['status'] ?? null;
 
             if (!$deliveryId || !$status) {
@@ -159,6 +186,7 @@ class ExternalDeliveryService implements ExternalDeliveryServiceInterface
                 ]);
             } else {
                 ExternalDelivery::create([
+                    'partner_id' => $this->partner?->id,
                     'seller_order_id' => $deliveryId,
                     'provider' => $provider,
                     'external_delivery_id' => $deliveryId,
@@ -204,6 +232,7 @@ class ExternalDeliveryService implements ExternalDeliveryServiceInterface
                 ]);
             } else {
                 ExternalDelivery::create([
+                    'partner_id' => $this->partner?->id,
                     'shipment_id' => $data['shipment_id'] ?? null,
                     'seller_order_id' => $data['seller_order_id'],
                     'provider' => $data['provider'] ?? $this->provider,
@@ -224,5 +253,64 @@ class ExternalDeliveryService implements ExternalDeliveryServiceInterface
         } catch (\Exception $e) {
             Log::error('External delivery sync exception', ['error' => $e->getMessage()]);
         }
+    }
+
+    private function buildHttpClient()
+    {
+        $client = Http::timeout(30);
+
+        if ($this->partner && $this->partner->auth_method === 'api_key') {
+            $header = $this->partner->api_key_header ?: 'X-API-Key';
+            $apiKey = $this->resolveCredential($this->partner->credential_reference);
+            if ($apiKey) {
+                $client = $client->withHeaders([$header => $apiKey]);
+            }
+        } else {
+            $client = $client->withToken($this->apiKey);
+        }
+
+        return $client;
+    }
+
+    private function verifySignature(string $rawBody, ?string $signature): bool
+    {
+        if (!$signature) {
+            return false;
+        }
+
+        $secret = config('external_delivery.webhook_secret', '');
+
+        if (!$secret) {
+            return false;
+        }
+
+        $expected = hash_hmac('sha256', $rawBody, $secret);
+
+        return hash_equals($expected, $signature);
+    }
+
+    private function isEventEnabled(string $eventType): bool
+    {
+        $enabled = config('external_delivery.enabled_events', 'shipment.updated,delivery.completed');
+        $events = array_filter(array_map('trim', explode(',', $enabled)));
+
+        if (empty($events)) {
+            return true;
+        }
+
+        return in_array($eventType, $events);
+    }
+
+    private function resolveCredential(?string $reference): ?string
+    {
+        if (!$reference) {
+            return null;
+        }
+
+        if (!str_starts_with($reference, 'vault://')) {
+            return $reference;
+        }
+
+        return config('external_delivery.api_key', '');
     }
 }

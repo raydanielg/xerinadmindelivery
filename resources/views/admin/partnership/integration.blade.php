@@ -24,6 +24,22 @@
                         @csrf
                         @method('PUT')
 
+                        <div class="card mb-4 border-info">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="bi bi-link-45deg"></i> {{ translate('Your Webhook Endpoint') }}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted mb-2">{{ translate('Give this URL to the partner. They will send logistics events here.') }}</p>
+                                <div class="key-box bg-light border rounded p-2 mb-2">
+                                    <code id="webhookEndpoint">{{ config('app.url') }}/api/partners/{{ $partner->id }}/webhooks/delivery</code>
+                                    <i class="bi bi-clipboard copy-btn" onclick="copyWebhookEndpoint(this)" title="Copy" style="cursor:pointer;opacity:.6;"></i>
+                                </div>
+                                <small class="text-muted">{{ translate('The partner must sign each request with HMAC-SHA256 using the webhook secret and send the signature in the X-Webhook-Signature header.') }}</small>
+                            </div>
+                        </div>
+
                         <div class="card mb-4">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">
@@ -137,6 +153,19 @@
 
     @push('script')
     <script>
+        function copyWebhookEndpoint(btn) {
+            var text = document.getElementById('webhookEndpoint').innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                var originalClass = btn.className;
+                btn.className = 'bi bi-check-circle-fill text-success';
+                btn.style.opacity = '1';
+                setTimeout(function() {
+                    btn.className = originalClass;
+                    btn.style.opacity = '.6';
+                }, 2000);
+            });
+        }
+
         (function () {
             var authSelect = document.getElementById('auth_method');
             var apiKeyFields = document.getElementById('api_key_fields');

@@ -2,6 +2,7 @@
 
 namespace Modules\TripManagement\Http\Controllers\Api;
 
+use App\Models\Partner;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -46,10 +47,26 @@ class ExternalDeliveryController extends Controller
 
     public function webhook(Request $request, string $provider): JsonResponse
     {
-        $signature = $request->header('x-delivery-signature');
+        $signature = $request->header('X-Webhook-Signature');
         $payload = $request->all();
+        $rawBody = $request->getContent();
 
-        $result = $this->externalDeliveryService->handleWebhook($provider, $payload, $signature);
+        $result = $this->externalDeliveryService->handleWebhook($provider, $payload, $signature, $rawBody);
+
+        return response()->json($result, $result['accepted'] ?? false ? 200 : 422);
+    }
+
+    public function webhookByPartner(Request $request, Partner $partner): JsonResponse
+    {
+        $this->externalDeliveryService->setPartner($partner);
+
+        $signature = $request->header('X-Webhook-Signature');
+        $payload = $request->all();
+        $rawBody = $request->getContent();
+
+        $provider = $partner->company_name ? str_slug($partner->company_name) : 'xerin_marketplace';
+
+        $result = $this->externalDeliveryService->handleWebhook($provider, $payload, $signature, $rawBody);
 
         return response()->json($result, $result['accepted'] ?? false ? 200 : 422);
     }

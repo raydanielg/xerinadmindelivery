@@ -2,6 +2,7 @@
 
 namespace Modules\TripManagement\Entities;
 
+use App\Models\Partner;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,6 +14,7 @@ class ExternalDelivery extends Model
     protected $table = 'external_deliveries';
 
     protected $fillable = [
+        'partner_id',
         'shipment_id',
         'seller_order_id',
         'provider',
@@ -42,5 +44,10 @@ class ExternalDelivery extends Model
     public function tripRequest()
     {
         return $this->belongsTo(TripRequest::class, 'shipment_id', 'id');
+    }
+
+    public function partner()
+    {
+        return $this->belongsTo(Partner::class);
     }
 }

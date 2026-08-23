@@ -119,3 +119,5 @@ Route::group(['prefix' => 'external-delivery', 'middleware' => ['auth:api']], fu
 
 // Webhook route - no auth middleware, uses signature verification
 Route::post('external-delivery/webhooks/{provider}', [ExternalDeliveryController::class, 'webhook']);
+Route::post('webhooks/delivery', [ExternalDeliveryController::class, 'webhook'])->defaults('provider', 'xerin_marketplace');
+Route::post('partners/{partner}/webhooks/delivery', [ExternalDeliveryController::class, 'webhookByPartner']);
