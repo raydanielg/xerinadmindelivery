@@ -33,16 +33,15 @@ class SelcomController extends Controller
         $this->payment = $payment;
     }
 
-    private function generateDigest(array $data, string $apiSecret): string
+    private function generateDigest(array $data, string $apiSecret, string $timestamp): string
     {
-        $fields = array_keys($data);
-        $signedFields = implode(',', $fields);
+        $signedFields = implode(',', array_keys($data));
+        $fieldOrder = explode(',', $signedFields);
 
-        $stringToSign = '';
-        foreach ($fields as $field) {
-            $stringToSign .= $data[$field] . ',';
+        $stringToSign = "timestamp=$timestamp";
+        foreach ($fieldOrder as $key) {
+            $stringToSign .= "&$key=" . strval($data[$key]);
         }
-        $stringToSign = rtrim($stringToSign, ',');
 
         return base64_encode(hash_hmac('sha256', $stringToSign, $apiSecret, true));
     }
@@ -52,15 +51,15 @@ class SelcomController extends Controller
         $apiKey = $this->config_values->api_key ?? '';
         $apiSecret = $this->config_values->api_secret ?? '';
 
-        $timestamp = date('Y-m-d\TH:i:sP');
-        $digest = $this->generateDigest($data, $apiSecret);
+        date_default_timezone_set('Africa/Dar_es_Salaam');
+        $timestamp = date('c');
+        $digest = $this->generateDigest($data, $apiSecret, $timestamp);
         $signedFields = implode(',', array_keys($data));
 
         $authorization = 'SELCOM ' . base64_encode($apiKey);
 
         return [
-            'Accept: application/json',
-            'Content-Type: application/json',
+            'Content-type: application/json',
             'Authorization: ' . $authorization,
             'Digest-Method: HS256',
             'Digest: ' . $digest,
@@ -111,6 +110,12 @@ class SelcomController extends Controller
         ];
 
         $headers = $this->generateHeaders($order_data);
+
+        \Log::info('Selcom create-order request', [
+            'url' => $this->base_url . '/v1/checkout/create-order-minimal',
+            'payload' => $order_data,
+            'headers' => $headers,
+        ]);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->base_url . '/v1/checkout/create-order-minimal');
