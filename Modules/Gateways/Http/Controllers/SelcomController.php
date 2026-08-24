@@ -37,7 +37,6 @@ class SelcomController extends Controller
     {
         $fields = array_keys($data);
         $signedFields = implode(',', $fields);
-        $data['signed_fields'] = $signedFields;
 
         $stringToSign = '';
         foreach ($fields as $field) {
@@ -100,15 +99,14 @@ class SelcomController extends Controller
             'buyer_email' => $payer_information->email ?? 'customer@example.com',
             'buyer_name' => $payer_information->name ?? 'Customer',
             'buyer_phone' => $payer_information->phone ?? '255000000000',
-            'amount' => round($payment_amount, 2),
+            'amount' => (string) round($payment_amount, 2),
             'currency' => $currency,
-            'payment_methods' => 'ALL',
             'redirect_url' => url('/') . '/payment/selcom/callback?payment_id=' . $order_id,
             'cancel_url' => url('/') . '/payment/selcom/cancel?payment_id=' . $order_id,
             'webhook' => url('/') . '/payment/selcom/webhook?payment_id=' . $order_id,
             'buyer_remarks' => 'None',
             'merchant_remarks' => 'None',
-            'no_of_items' => 1,
+            'no_of_items' => '1',
         ];
 
         $headers = $this->generateHeaders($order_data);
@@ -122,12 +120,19 @@ class SelcomController extends Controller
 
         $response = curl_exec($ch);
         if (curl_errno($ch)) {
+            \Log::error('Selcom API curl error', ['error' => curl_error($ch)]);
             curl_close($ch);
             return response()->json($this->responseFormatter(DEFAULT_204), 200);
         }
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $result = json_decode($response, true);
+
+        \Log::info('Selcom create-order response', [
+            'http_code' => $httpCode,
+            'response' => $response,
+        ]);
 
         if (isset($result['resultcode']) && $result['resultcode'] === '000') {
             $payment_gateway_url = $result['data'][0]['payment_gateway_url'] ?? null;
