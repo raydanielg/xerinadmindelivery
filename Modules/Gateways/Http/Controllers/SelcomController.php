@@ -11,6 +11,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Validator;
 use Modules\Gateways\Traits\Processor;
 use Modules\Gateways\Entities\PaymentRequest;
+use Selcom\ApigwClient\Client;
 
 class SelcomController extends Controller
 {
@@ -33,39 +34,15 @@ class SelcomController extends Controller
         $this->payment = $payment;
     }
 
-    private function generateDigest(array $data, string $apiSecret, string $timestamp): string
+    private function getClient(): ?Client
     {
-        $signedFields = implode(',', array_keys($data));
-        $fieldOrder = explode(',', $signedFields);
-
-        $stringToSign = "timestamp=$timestamp";
-        foreach ($fieldOrder as $key) {
-            $stringToSign .= "&$key=" . strval($data[$key]);
+        if (!isset($this->config_values)) {
+            return null;
         }
-
-        return base64_encode(hash_hmac('sha256', $stringToSign, $apiSecret, true));
-    }
-
-    private function generateHeaders(array $data): array
-    {
         $apiKey = $this->config_values->api_key ?? '';
         $apiSecret = $this->config_values->api_secret ?? '';
 
-        date_default_timezone_set('Africa/Dar_es_Salaam');
-        $timestamp = date('c');
-        $digest = $this->generateDigest($data, $apiSecret, $timestamp);
-        $signedFields = implode(',', array_keys($data));
-
-        $authorization = 'SELCOM ' . base64_encode($apiKey);
-
-        return [
-            'Content-type: application/json',
-            'Authorization: ' . $authorization,
-            'Digest-Method: HS256',
-            'Digest: ' . $digest,
-            'Timestamp: ' . $timestamp,
-            'Signed-Fields: ' . $signedFields,
-        ];
+        return new Client($this->base_url, $apiKey, $apiSecret);
     }
 
     public function index(Request $request): JsonResponse|Redirector|RedirectResponse|Application
@@ -93,6 +70,10 @@ class SelcomController extends Controller
         $vendor = $this->config_values->vendor ?? 'VENDORTILL';
         $order_id = $data['id'];
 
+        $redirect_url = url('/') . '/payment/selcom/callback?payment_id=' . $order_id;
+        $cancel_url = url('/') . '/payment/selcom/cancel?payment_id=' . $order_id;
+        $webhook_url = url('/') . '/payment/selcom/webhook?payment_id=' . $order_id;
+
         $order_data = [
             'vendor' => $vendor,
             'order_id' => $order_id,
@@ -101,43 +82,28 @@ class SelcomController extends Controller
             'buyer_phone' => $payer_information->phone ?? '255000000000',
             'amount' => (string) round($payment_amount, 2),
             'currency' => $currency,
-            'redirect_url' => url('/') . '/payment/selcom/callback?payment_id=' . $order_id,
-            'cancel_url' => url('/') . '/payment/selcom/cancel?payment_id=' . $order_id,
-            'webhook' => url('/') . '/payment/selcom/webhook?payment_id=' . $order_id,
+            'redirect_url' => base64_encode($redirect_url),
+            'cancel_url' => base64_encode($cancel_url),
+            'webhook' => base64_encode($webhook_url),
             'buyer_remarks' => 'None',
             'merchant_remarks' => 'None',
             'no_of_items' => '1',
         ];
 
-        $headers = $this->generateHeaders($order_data);
+        $client = $this->getClient();
+        if (!$client) {
+            return response()->json($this->responseFormatter(DEFAULT_204), 200);
+        }
 
         \Log::info('Selcom create-order request', [
             'url' => $this->base_url . '/v1/checkout/create-order-minimal',
             'payload' => $order_data,
-            'headers' => $headers,
         ]);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->base_url . '/v1/checkout/create-order-minimal');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($order_data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) {
-            \Log::error('Selcom API curl error', ['error' => curl_error($ch)]);
-            curl_close($ch);
-            return response()->json($this->responseFormatter(DEFAULT_204), 200);
-        }
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        $result = json_decode($response, true);
+        $result = $client->postFunc('/v1/checkout/create-order-minimal', $order_data);
 
         \Log::info('Selcom create-order response', [
-            'http_code' => $httpCode,
-            'response' => $response,
+            'response' => $result,
         ]);
 
         if (isset($result['resultcode']) && $result['resultcode'] === '000') {
@@ -209,25 +175,14 @@ class SelcomController extends Controller
 
     private function getOrderStatus(string $order_id): ?array
     {
-        if (!isset($this->config_values)) {
+        $client = $this->getClient();
+        if (!$client) {
             return null;
         }
 
         $data = ['order_id' => $order_id];
-        $headers = $this->generateHeaders($data);
+        $result = $client->getFunc('/v1/checkout/order-status', $data);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->base_url . '/v1/checkout/order-status?order_id=' . $order_id);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) {
-            curl_close($ch);
-            return null;
-        }
-        curl_close($ch);
-
-        return json_decode($response, true);
+        return is_array($result) ? $result : null;
     }
 }
