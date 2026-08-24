@@ -109,7 +109,8 @@ class SelcomController extends Controller
         if (isset($result['resultcode']) && $result['resultcode'] === '000') {
             $payment_gateway_url = $result['data'][0]['payment_gateway_url'] ?? null;
             if ($payment_gateway_url) {
-                return redirect()->away($payment_gateway_url);
+                $decoded_url = base64_decode($payment_gateway_url);
+                return redirect()->away($decoded_url);
             }
         }
 
