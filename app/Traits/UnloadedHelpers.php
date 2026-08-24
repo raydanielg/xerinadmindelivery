@@ -7,9 +7,8 @@ trait UnloadedHelpers
     {
         $envFile = app()->environmentFilePath();
         $str = file_get_contents($envFile);
-        $oldValue = env($envKey);
-        if (strpos($str, $envKey) !== false) {
-            $str = str_replace("{$envKey}={$oldValue}", "{$envKey}={$envValue}", $str);
+        if (preg_match("/^{$envKey}=.*/m", $str, $matches)) {
+            $str = preg_replace("/^{$envKey}=.*/m", "{$envKey}={$envValue}", $str);
         } else {
             $str .= "{$envKey}={$envValue}\n";
         }
