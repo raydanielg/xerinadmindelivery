@@ -59,6 +59,7 @@ class SelcomController extends Controller
         $authorization = 'SELCOM ' . base64_encode($apiKey);
 
         return [
+            'Accept: application/json',
             'Content-Type: application/json',
             'Authorization: ' . $authorization,
             'Digest-Method: HS256',
